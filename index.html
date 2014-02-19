@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Jellyfish</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- A basic responsive reset -->
+		<style>
+			@-webkit-viewport { width: device-width; zoom: 1.0; }
+			   @-moz-viewport { width: device-width; zoom: 1.0; }
+			    @-ms-viewport { width: device-width; zoom: 1.0; }
+			     @-o-viewport { width: device-width; zoom: 1.0; }
+			        @viewport { width: device-width; zoom: 1.0; }
+
+			html { overflow-y: auto; }
+
+			img,
+			audio,
+			video,
+			canvas {
+				max-width: 100%;
+				height: auto;
+			}
+
+			/*  Sets body width */
+			.container {
+				max-width: 40em;
+				width: 88%;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			/*	Example image classes */
+
+			/*  Adds padding and a white border */
+			.img-photo {
+			  padding: 0.25em;
+			  background-color: white;
+			  border: 0.0725em solid #cccccc;
+			  box-shadow: 0 0.0725em 0.0725em rgba(0, 0, 0, 0.1);
+			}
+
+			/*	Gives image rounded corners */
+			.img-rounded {
+				border-radius: 1em;
+			}
+		</style>
+
+		<!-- HTML5 Shim for IE -->
+		<!--[if IE]>
+			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<section class="container">
+
+			<h1 style="text-align: center; font-size: 3em;">Jellyfish</h1>
+			<p style="text-align: center; font-size: 1.5em;">A progressively enhanced image lazy loader.</p>
+
+			<h2>Elephant</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/elephant.jpg" data-class="img-photo" data-height="791" data-width="1024" data-title="An elephant on a tarp" data-loading="img/loading.gif" href="img/elephant.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>Friends</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/friends.jpg" data-class="img-rounded" data-title="Two photos sharing a drink" href="img/friends.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>Ice Skaters</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/ice-skates.jpg" data-class="img-photo img-rounded" data-title="Old-timey ice skaters" href="img/ice-skates.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>An Awesome Mustache</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/mustache.jpg" data-title="An awesome mustache" href="img/mustache.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>Puppy</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/puppy.jpg" href="img/puppy.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>Runners</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/runners.jpg" href="img/runners.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>Sailors</h2>
+			<p>
+				<a data-lazy-load data-img="sample-images/sailors.jpg" href="img/sailors.jpg">View Photo</a>
+			</p>
+
+
+		</section>
+
+		<script src="jellyfish.js"></script>
+
+	</body>
+</html>
