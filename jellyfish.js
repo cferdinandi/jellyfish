@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v1.0
+	Jellyfish v1.1
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -22,7 +22,8 @@ window.jellyfish = (function (window, document, undefined) {
 		// SELECTORS
 
 		var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
-		var loadingSrc = 'img/loading.gif';
+		var loadingIcon = 'img/loading.gif'; // Loading icon location
+		var offset = 0; // How far below the fold to start loading images (in pixels)
 		var eventTimeout; // Timer for event throttler
 
 
@@ -38,7 +39,7 @@ window.jellyfish = (function (window, document, undefined) {
 			var dataHeight = img.getAttribute( 'data-height' ) === null ? '' : img.getAttribute( 'data-height' );
 			var dataWidth = img.getAttribute( 'data-width' ) === null ? '' : img.getAttribute( 'data-width' );
 			var dataTitle = img.getAttribute( 'data-title' ) === null ? '' : img.getAttribute( 'data-title' );
-			var dataLoading = img.getAttribute( 'data-loading' ) === null ? loadingSrc : img.getAttribute( 'data-loading' );
+			var dataLoading = img.getAttribute( 'data-loading' ) === null ? loadingIcon : img.getAttribute( 'data-loading' );
 
 			// EVENTS, LISTENERS, AND INITS
 			loadingImg.setAttribute( 'data-lazy-load', '' );
@@ -63,12 +64,12 @@ window.jellyfish = (function (window, document, undefined) {
 		// Check if an image is visible in the viewport
 		// Returns true/false
 		var isImgInViewport = function ( img ) {
-			var rect = img.getBoundingClientRect();
+			var distance = img.getBoundingClientRect();
 			return (
-				rect.top >= 0 &&
-				rect.left >= 0 &&
-				rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-				rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+				distance.top >= 0 &&
+				distance.left >= 0 &&
+				distance.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
+				distance.right <= (window.innerWidth || document.documentElement.clientWidth)
 			);
 		};
 
