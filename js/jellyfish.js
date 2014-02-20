@@ -23,7 +23,7 @@ window.jellyfish = (function (window, document, undefined) {
 
 		var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
 		var loadingIcon = 'img/loading.gif'; // Loading icon location
-		var offset = 100; // How far below the fold to start loading images (in pixels)
+		var offset = 500; // How far below the fold to start loading images (in pixels)
 		var eventTimeout; // Timer for event throttler
 
 
