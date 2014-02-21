@@ -61,28 +61,28 @@
 
 			<h2>Elephant</h2>
 			<p>
-				<a data-lazy-load data-img="sample-images/elephant.jpg" data-class="img-photo" data-height="791" data-width="1024" data-title="An elephant on a tarp" data-loading="img/loading.gif" href="img/elephant.jpg">View Photo</a>
+				<a data-lazy-load data-img="sample-images/elephant.jpg" data-options="class: img-photo; height: 791; width: 1024; title: An elephant on a tarp" href="img/elephant.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>Friends</h2>
 			<p>
-				<a data-lazy-load data-img="sample-images/friends.jpg" data-class="img-rounded" data-title="Two photos sharing a drink" href="img/friends.jpg">View Photo</a>
+				<a data-lazy-load data-img="sample-images/friends.jpg" data-options="class: img-rounded; title: Two photos sharing a drink" href="img/friends.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>Ice Skaters</h2>
 			<p>
-				<a data-lazy-load data-img="sample-images/ice-skates.jpg" data-class="img-photo img-rounded" data-title="Old-timey ice skaters" href="img/ice-skates.jpg">View Photo</a>
+				<a data-lazy-load data-img="sample-images/ice-skates.jpg" data-options="class: img-photo img-rounded; title: Old-timey ice skaters" href="img/ice-skates.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>An Awesome Mustache</h2>
 			<p>
-				<a data-lazy-load data-img="sample-images/mustache.jpg" data-title="An awesome mustache" href="img/mustache.jpg">View Photo</a>
+				<a data-lazy-load data-img="sample-images/mustache.jpg" data-options="title: An awesome mustache" href="img/mustache.jpg">View Photo</a>
 			</p>
 
 			<br><br>
@@ -110,6 +110,12 @@
 		</section>
 
 		<script src="jellyfish.js"></script>
+		<script>
+			jellyfish.init({
+				loadingIcon: "sample-images/elephant.jpg",
+				offset: "300",
+			});
+		</script>
 
 	</body>
 </html>
