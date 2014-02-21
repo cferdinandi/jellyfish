@@ -22,12 +22,12 @@ window.jellyfish = (function (window, document, undefined) {
 	// Private method
 	var _createImgLoader = function ( img, loadingIcon ) {
 
-		// SELECTORS
+		// Selectors and variables
 		var loadingImg = document.createElement( 'img' );
 		var dataImg = img.getAttribute( 'data-img' );
 		var dataOptions = img.getAttribute( 'data-options' );
 
-		// EVENTS, LISTENERS, AND INITS
+		// Set image attritibutes
 		loadingImg.setAttribute( 'data-lazy-load', '' );
 		loadingImg.setAttribute( 'data-img', dataImg );
 		if ( dataOptions !== null ) {
@@ -50,6 +50,7 @@ window.jellyfish = (function (window, document, undefined) {
 	// Boolean: Returns true/false
 	var _isImgInViewport = function ( img, offset ) {
 		var distance = img.getBoundingClientRect();
+		console.log(offset);
 		return (
 			distance.top >= 0 &&
 			distance.left >= 0 &&
@@ -145,7 +146,7 @@ window.jellyfish = (function (window, document, undefined) {
 			// Options and defaults
 			options = options || {};
 			var loadingIcon = options.loadingIcon || 'img/loading.gif'; // Loading icon location
-			var offset = options.offset || 0; // How far below the fold to start loading images (in pixels)
+			var offset = parseInt(options.offset, 10) || 0; // How far below the fold to start loading images (in pixels)
 
 			// Selectors and variables
 			var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
@@ -158,14 +159,9 @@ window.jellyfish = (function (window, document, undefined) {
 				images = document.querySelectorAll('[data-lazy-load]'); // Reset image variable with new ndoes
 				_checkForImages( images, offset ); // check if any images are visible on load
 
-				// Run event throttler on scroll or resize
-				var _runEventThrottler = function () {
-					_eventThrottler( eventTimeout, images, offset );
-				};
-
 				// check if any images are visible on scroll or resize
-				window.addEventListener('scroll', _runEventThrottler, false);
-				window.addEventListener('resize', _runEventThrottler, false);
+				window.addEventListener('scroll', _eventThrottler.bind( this, eventTimeout, images, offset ), false);
+				window.addEventListener('resize', _eventThrottler.bind( this, eventTimeout, images, offset ), false);
 
 			}
 
