@@ -18,8 +18,31 @@ window.jellyfish = (function (window, document, undefined) {
 
 	'use strict';
 
+	// Default settings
+	// Private method
+	// Returns an {object}
+	var _defaults = function () {
+		return {
+			loadingIcon: 'img/loading.gif',
+			offset: 0,
+			callbackBefore: function () {},
+			callbackAfter: function () {}
+		};
+	};
+
+	// Merge default settings with user options
+	// Private method
+	// Returns an {object}
+	var _mergeObjects = function ( original, updates ) {
+		for (var key in updates) {
+			original[key] = updates[key];
+		}
+		return original;
+	};
+
 	// Replace div, span, or link with image loading graphic
 	// Private method
+	// Runs functions
 	var _createImgLoader = function ( img, loadingIcon ) {
 
 		// Selectors and variables
@@ -40,6 +63,7 @@ window.jellyfish = (function (window, document, undefined) {
 
 	// For each lazy load image, replace the default placeholder with a loading graphic
 	// Private method
+	// Runs functions
 	var _addImgLoaders = function ( images, loadingIcon ) {
 		Array.prototype.forEach.call(images, function (img, index) {
 			_createImgLoader( img, loadingIcon );
@@ -50,7 +74,6 @@ window.jellyfish = (function (window, document, undefined) {
 	// Boolean: Returns true/false
 	var _isImgInViewport = function ( img, offset ) {
 		var distance = img.getBoundingClientRect();
-		console.log(offset);
 		return (
 			distance.top >= 0 &&
 			distance.left >= 0 &&
@@ -61,11 +84,10 @@ window.jellyfish = (function (window, document, undefined) {
 
 	// Convert data-options attribute into an object of key/value pairs
 	// Private method
-	// Returns {object}
+	// Returns an {object}
 	var _getDataOptions = function ( options ) {
-
-		if ( options === null ) {
-			return null;
+		if ( options === null || options === undefined  ) {
+			return {};
 		} else {
 			var settings = {}; // Create settings object
 			options = options.split(';'); // Split into array of options
@@ -73,17 +95,18 @@ window.jellyfish = (function (window, document, undefined) {
 			// Create a key/value pair for each setting
 			options.forEach( function(option) {
 				option = option.trim();
-				option = option.split(':');
-				settings[option[0]] = option[1].trim();
+				if ( option !== '' ) {
+					option = option.split(':');
+					settings[option[0]] = option[1].trim();
+				}
 			});
-
 			return settings;
 		}
-
 	};
 
 	// Pass data attribute values to the image and remove the data attribute
 	// Private method
+	// Runs functions
 	var _setImgAttributes = function ( img, attributes ) {
 		if ( attributes !== null ) {
 			for ( var key in attributes ) {
@@ -94,6 +117,7 @@ window.jellyfish = (function (window, document, undefined) {
 
 	// Replace the loading graphic with the actual image
 	// Private method
+	// Runs functions
 	var _replaceImg = function ( img ) {
 
 		// Get image attributes
@@ -110,58 +134,61 @@ window.jellyfish = (function (window, document, undefined) {
 
 	// If the image is visibile in the viewport, replace the loading graphic with the real image
 	// Private method
+	// Runs functions
 	var _loadImg = function ( img, offset ) {
-		if ( _isImgInViewport( img, offset ) && img.hasAttribute('data-img') !== null && !img.hasAttribute('data-img-loaded') ) {
+		if ( _isImgInViewport( img, offset ) === true && img.hasAttribute('data-img') !== null && !img.hasAttribute('data-img-loaded') ) {
 			_replaceImg( img );
 			img.setAttribute( 'data-img-loaded', '' );
 		}
 	};
 
 	// Check if any lazy load images are visible in the viewport
-	// Private method
-	var _checkForImages = function ( images, offset ) {
+	// Public method
+	// Runs functions
+	var checkForImages = function ( images, options ) {
+		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+		options.callbackBefore(); // Run callbacks before loading images
 		Array.prototype.forEach.call(images, function (img, index) {
-			_loadImg( img, offset );
+			_loadImg( img, parseInt(options.offset, 10) ); // Load each image that's in the viewport
 		});
+		options.callbackAfter(); // Run callbacks after loading images
 	};
 
-	// On window scroll and resize, only run `_checkForImages` at a rate of 15fps for better performance
+	// On window scroll and resize, only run `checkForImages` at a rate of 15fps for better performance
 	// Private method
-	var _eventThrottler = function ( eventTimeout, images, offset ) {
+	// Runs functions
+	var _eventThrottler = function ( eventTimeout, images, options ) {
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;
-				_checkForImages( images, offset );
+				checkForImages( images, options );
 			}, 66);
 		}
 	};
 
 	// Initalize Jellyfish
 	// Public method
+	// Runs functions
 	var init = function ( options ) {
 
 		// Feature test before initializing
 		if ( 'querySelector' in document && 'addEventListener' in window && Array.prototype.forEach ) {
 
-			// Options and defaults
-			options = options || {};
-			var loadingIcon = options.loadingIcon || 'img/loading.gif'; // Loading icon location
-			var offset = parseInt(options.offset, 10) || 0; // How far below the fold to start loading images (in pixels)
-
-			// Selectors and variables
+			// NEW Selectors and variables
+			options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
 			var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
 			var eventTimeout; // Timer for event throttler
 
-			// Only run Jellyfish if lazy load images exist on the page
+			// Run Jellyfish if lazy load images exist on the page
 			if ( images.length !== 0 ) {
 
-				_addImgLoaders( images, loadingIcon ); // replace placeholders with loading graphics
-				images = document.querySelectorAll('[data-lazy-load]'); // Reset image variable with new ndoes
-				_checkForImages( images, offset ); // check if any images are visible on load
+				_addImgLoaders( images, options.loadingIcon ); // replace placeholders with loading graphics
+				images = document.querySelectorAll('[data-lazy-load]'); // Reset image variable with new nodes
+				checkForImages( images, options ); // check if any images are visible on load
 
 				// check if any images are visible on scroll or resize
-				window.addEventListener('scroll', _eventThrottler.bind( this, eventTimeout, images, offset ), false);
-				window.addEventListener('resize', _eventThrottler.bind( this, eventTimeout, images, offset ), false);
+				window.addEventListener('scroll', _eventThrottler.bind( this, eventTimeout, images, options ), false);
+				window.addEventListener('resize', _eventThrottler.bind( this, eventTimeout, images, options ), false);
 
 			}
 
@@ -171,7 +198,8 @@ window.jellyfish = (function (window, document, undefined) {
 
 	// Return public methods
 	return {
-		init: init
+		init: init,
+		checkForImages: checkForImages
 	};
 
 })(window, document);

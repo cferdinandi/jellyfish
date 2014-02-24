@@ -5,6 +5,11 @@ Jellyfish is a progressively enhanced image lazy loader.
 Getting started with Jellyfish is really easy. [View the online tutorial](http://cferdinandi.github.com/jellyfish/) or dig through the `index.html` file.
 
 ## Changelog
+* v3.0 (February 24, 2014)
+  * Better public/private method namespacing.
+  * Require `init()` call to run.
+  * New API exposes additional methods for use in your own scripts.
+  * Better documentation.
 * v2.0 (February 20, 2014)
   * Better public/private method namespacing.
   * Require `init()` call to run.
