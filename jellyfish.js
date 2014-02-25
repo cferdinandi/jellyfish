@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v1.1
+	Jellyfish v2.0
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -10,137 +10,199 @@
 	Free to use under the MIT License.
 	http://gomakethings.com/mit/
 
+	// TODO: Convert various data attributes into single data-options parser
+
  * ============================================================= */
 
 window.jellyfish = (function (window, document, undefined) {
 
 	'use strict';
 
-	// Feature Test
-	if ( 'querySelector' in document && 'addEventListener' in window && Array.prototype.forEach ) {
-
-		// SELECTORS
-
-		var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
-		var loadingIcon = 'img/loading.gif'; // Loading icon location
-		var offset = 0; // How far below the fold to start loading images (in pixels)
-		var eventTimeout; // Timer for event throttler
-
-
-		// METHODS
-
-		// Replace div, span, or link with image loading graphic
-		var createImgLoader = function ( img ) {
-
-			// SELECTORS
-			var loadingImg = document.createElement( 'img' );
-			var dataImg = img.getAttribute( 'data-img' );
-			var dataClass = img.getAttribute( 'data-class' ) === null ? '' : img.getAttribute( 'data-class' );
-			var dataHeight = img.getAttribute( 'data-height' ) === null ? '' : img.getAttribute( 'data-height' );
-			var dataWidth = img.getAttribute( 'data-width' ) === null ? '' : img.getAttribute( 'data-width' );
-			var dataTitle = img.getAttribute( 'data-title' ) === null ? '' : img.getAttribute( 'data-title' );
-			var dataLoading = img.getAttribute( 'data-loading' ) === null ? loadingIcon : img.getAttribute( 'data-loading' );
-
-			// EVENTS, LISTENERS, AND INITS
-			loadingImg.setAttribute( 'data-lazy-load', '' );
-			loadingImg.setAttribute( 'data-img', dataImg );
-			loadingImg.setAttribute( 'data-class', dataClass );
-			loadingImg.setAttribute( 'data-height', dataHeight );
-			loadingImg.setAttribute(  'data-width', dataWidth );
-			loadingImg.setAttribute( 'title', dataTitle );
-			loadingImg.setAttribute( 'src', dataLoading );
-			img.parentNode.replaceChild( loadingImg, img );
-
+	// Default settings
+	// Private method
+	// Returns an {object}
+	var _defaults = function () {
+		return {
+			loadingIcon: 'img/loading.gif',
+			offset: 0,
+			callbackBefore: function () {},
+			callbackAfter: function () {}
 		};
+	};
 
-		// For each lazy load image, replace the default placeholder with a loading graphic
-		var addImgLoaders = function () {
-			Array.prototype.forEach.call(images, function (img, index) {
-				createImgLoader( img );
+	// Merge default settings with user options
+	// Private method
+	// Returns an {object}
+	var _mergeObjects = function ( original, updates ) {
+		for (var key in updates) {
+			original[key] = updates[key];
+		}
+		return original;
+	};
+
+	// Replace div, span, or link with image loading graphic
+	// Private method
+	// Runs functions
+	var _createImgLoader = function ( img, loadingIcon ) {
+
+		// Selectors and variables
+		var loadingImg = document.createElement( 'img' );
+		var dataImg = img.getAttribute( 'data-lazy-load' );
+		var dataOptions = img.getAttribute( 'data-options' );
+
+		// Set image attritibutes
+		loadingImg.setAttribute( 'data-lazy-load', dataImg );
+		if ( dataOptions !== null ) {
+			loadingImg.setAttribute( 'data-options', dataOptions );
+		}
+		loadingImg.setAttribute( 'src', loadingIcon );
+		img.parentNode.replaceChild( loadingImg, img );
+
+	};
+
+	// For each lazy load image, replace the default placeholder with a loading graphic
+	// Private method
+	// Runs functions
+	var _addImgLoaders = function ( images, loadingIcon ) {
+		Array.prototype.forEach.call(images, function (img, index) {
+			_createImgLoader( img, loadingIcon );
+		});
+	};
+
+	// Check if an image is visible in the viewport
+	// Boolean: Returns true/false
+	var _isImgInViewport = function ( img, offset ) {
+		var distance = img.getBoundingClientRect();
+		return (
+			distance.top >= 0 &&
+			distance.left >= 0 &&
+			distance.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
+			distance.right <= (window.innerWidth || document.documentElement.clientWidth)
+		);
+	};
+
+	// Convert data-options attribute into an object of key/value pairs
+	// Private method
+	// Returns an {object}
+	var _getDataOptions = function ( options ) {
+		if ( options === null || options === undefined  ) {
+			return {};
+		} else {
+			var settings = {}; // Create settings object
+			options = options.split(';'); // Split into array of options
+
+			// Create a key/value pair for each setting
+			options.forEach( function(option) {
+				option = option.trim();
+				if ( option !== '' ) {
+					option = option.split(':');
+					settings[option[0]] = option[1].trim();
+				}
 			});
-			images = document.querySelectorAll('[data-lazy-load]');
-		};
+			return settings;
+		}
+	};
 
-		// Check if an image is visible in the viewport
-		// Returns true/false
-		var isImgInViewport = function ( img ) {
-			var distance = img.getBoundingClientRect();
-			return (
-				distance.top >= 0 &&
-				distance.left >= 0 &&
-				distance.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
-				distance.right <= (window.innerWidth || document.documentElement.clientWidth)
-			);
-		};
-
-		// Pass data attribute values to the image and remove the data attribute
-		// If value exists, set it. Remove associated data attribute.
-		var setImgAttribute = function ( img, attribute, value ) {
-			if ( value !== '' ) {
-				img.setAttribute( attribute, value );
+	// Pass data attribute values to the image and remove the data attribute
+	// Private method
+	// Runs functions
+	var _setImgAttributes = function ( img, attributes ) {
+		if ( attributes !== null ) {
+			for ( var key in attributes ) {
+				img.setAttribute( key, attributes[key] );
 			}
-			img.removeAttribute( value );
-		};
+		}
+	};
 
-		// Replace the loading graphic with the actual image
-		var replaceImg = function ( img ) {
+	// Replace the loading graphic with the actual image
+	// Private method
+	// Runs functions
+	var _replaceImg = function ( img, options ) {
 
-			// SELECTORS
-			var newImg = img.getAttribute( 'data-img' );
-			var imgClass = img.getAttribute( 'data-class' );
-			var imgHeight = img.getAttribute( 'data-height' );
-			var imgWidth = img.getAttribute( 'data-width' );
+		// Get image attributes
+		var newImg = img.getAttribute( 'data-lazy-load' );
+		var imgAttributes = _getDataOptions( img.getAttribute( 'data-options' ) );
 
-			// EVENTS, LISTENERS, AND INITS
-			setImgAttribute( img, 'class', imgClass );
-			setImgAttribute( img, 'height', imgHeight );
-			setImgAttribute( img, 'width', imgWidth );
-			img.setAttribute( 'src', newImg );
+		options.callbackBefore(); // Run callbacks before replacing image
 
-		};
+		// Replace image attributes
+		_setImgAttributes( img, imgAttributes );
+		img.setAttribute( 'src', newImg );
+		img.removeAttribute( 'data-img' );
+		img.removeAttribute( 'data-options' );
 
-		// If the image is visibile in the viewport, replace the loading graphic with the real image
-		var loadImg = function ( img ) {
-			if ( isImgInViewport( img ) && img.hasAttribute('data-img') !== null && !img.hasAttribute('data-img-loaded') ) {
-				replaceImg( img );
-				img.setAttribute( 'data-img-loaded', '' );
+		options.callbackBefore(); // Run callbacks after replacing image
+
+	};
+
+	// If the image is visibile in the viewport, replace the loading graphic with the real image
+	// Private method
+	// Runs functions
+	var _loadImg = function ( img, offset, options ) {
+		if ( _isImgInViewport( img, offset ) === true && img.getAttribute('data-lazy-load') !== '' && !img.hasAttribute('data-img-loaded') ) {
+			_replaceImg( img, options );
+			img.setAttribute( 'data-img-loaded', '' );
+		}
+	};
+
+	// Check if any lazy load images are visible in the viewport
+	// Public method
+	// Runs functions
+	var checkForImages = function ( images, options ) {
+		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+		options.callbackBefore(); // Run callbacks before loading images
+		Array.prototype.forEach.call(images, function (img, index) {
+			_loadImg( img, parseInt(options.offset, 10), options ); // Load each image that's in the viewport
+		});
+		options.callbackAfter(); // Run callbacks after loading images
+	};
+
+	// On window scroll and resize, only run `checkForImages` at a rate of 15fps for better performance
+	// Private method
+	// Runs functions
+	var _eventThrottler = function ( eventTimeout, images, options ) {
+		if ( !eventTimeout ) {
+			eventTimeout = setTimeout( function() {
+				eventTimeout = null;
+				checkForImages( images, options );
+			}, 66);
+		}
+	};
+
+	// Initalize Jellyfish
+	// Public method
+	// Runs functions
+	var init = function ( options ) {
+
+		// Feature test before initializing
+		if ( 'querySelector' in document && 'addEventListener' in window && Array.prototype.forEach ) {
+
+			// Selectors and variables
+			options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+			var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
+			var eventTimeout; // Timer for event throttler
+
+			// Run Jellyfish if lazy load images exist on the page
+			if ( images.length !== 0 ) {
+
+				_addImgLoaders( images, options.loadingIcon ); // replace placeholders with loading graphics
+				images = document.querySelectorAll('[data-lazy-load]'); // Reset image variable with new nodes
+				checkForImages( images, options ); // check if any images are visible on load
+
+				// check if any images are visible on scroll or resize
+				window.addEventListener('scroll', _eventThrottler.bind( null, eventTimeout, images, options ), false);
+				window.addEventListener('resize', _eventThrottler.bind( null, eventTimeout, images, options ), false);
+
 			}
-		};
-
-		// Check if any lazy load images are visible in the viewport
-		var checkForImages = function () {
-			Array.prototype.forEach.call(images, function (img, index) {
-				loadImg( img );
-			});
-		};
-
-		// On window scroll and resize, only run `checkForImages` at a rate of 15fps.
-		// Better for performance.
-		var eventThrottler = function () {
-			// ignore resize events as long as an actualResizeHandler execution is in the queue
-			if ( !eventTimeout ) {
-				eventTimeout = setTimeout( function() {
-					eventTimeout = null;
-					checkForImages();
-				}, 66);
-			}
-		};
-
-
-		// EVENTS, LISTENERS, AND INITS
-
-		// Only run Jellyfish if lazy load images exist on the page
-		if ( images.length !== 0 ) {
-
-			addImgLoaders(); // replace placeholders with loading graphics
-			checkForImages(); // check if any images are visible on load
-
-			// check if any images are visible on scroll or resize
-			window.addEventListener('scroll', eventThrottler, false);
-			window.addEventListener('resize', eventThrottler, false);
 
 		}
 
-	}
+	};
+
+	// Return public methods
+	return {
+		init: init,
+		checkForImages: checkForImages
+	};
 
 })(window, document);
