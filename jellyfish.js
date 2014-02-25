@@ -47,12 +47,11 @@ window.jellyfish = (function (window, document, undefined) {
 
 		// Selectors and variables
 		var loadingImg = document.createElement( 'img' );
-		var dataImg = img.getAttribute( 'data-img' );
+		var dataImg = img.getAttribute( 'data-lazy-load' );
 		var dataOptions = img.getAttribute( 'data-options' );
 
 		// Set image attritibutes
-		loadingImg.setAttribute( 'data-lazy-load', '' );
-		loadingImg.setAttribute( 'data-img', dataImg );
+		loadingImg.setAttribute( 'data-lazy-load', dataImg );
 		if ( dataOptions !== null ) {
 			loadingImg.setAttribute( 'data-options', dataOptions );
 		}
@@ -118,26 +117,30 @@ window.jellyfish = (function (window, document, undefined) {
 	// Replace the loading graphic with the actual image
 	// Private method
 	// Runs functions
-	var _replaceImg = function ( img ) {
+	var _replaceImg = function ( img, options ) {
 
 		// Get image attributes
-		var newImg = img.getAttribute( 'data-img' );
-		var options = _getDataOptions( img.getAttribute( 'data-options' ) );
+		var newImg = img.getAttribute( 'data-lazy-load' );
+		var imgAttributes = _getDataOptions( img.getAttribute( 'data-options' ) );
+
+		options.callbackBefore(); // Run callbacks before replacing image
 
 		// Replace image attributes
-		_setImgAttributes( img, options );
+		_setImgAttributes( img, imgAttributes );
 		img.setAttribute( 'src', newImg );
 		img.removeAttribute( 'data-img' );
 		img.removeAttribute( 'data-options' );
+
+		options.callbackBefore(); // Run callbacks after replacing image
 
 	};
 
 	// If the image is visibile in the viewport, replace the loading graphic with the real image
 	// Private method
 	// Runs functions
-	var _loadImg = function ( img, offset ) {
-		if ( _isImgInViewport( img, offset ) === true && img.hasAttribute('data-img') !== null && !img.hasAttribute('data-img-loaded') ) {
-			_replaceImg( img );
+	var _loadImg = function ( img, offset, options ) {
+		if ( _isImgInViewport( img, offset ) === true && img.getAttribute('data-lazy-load') !== '' && !img.hasAttribute('data-img-loaded') ) {
+			_replaceImg( img, options );
 			img.setAttribute( 'data-img-loaded', '' );
 		}
 	};
@@ -149,7 +152,7 @@ window.jellyfish = (function (window, document, undefined) {
 		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
 		options.callbackBefore(); // Run callbacks before loading images
 		Array.prototype.forEach.call(images, function (img, index) {
-			_loadImg( img, parseInt(options.offset, 10) ); // Load each image that's in the viewport
+			_loadImg( img, parseInt(options.offset, 10), options ); // Load each image that's in the viewport
 		});
 		options.callbackAfter(); // Run callbacks after loading images
 	};
@@ -174,7 +177,7 @@ window.jellyfish = (function (window, document, undefined) {
 		// Feature test before initializing
 		if ( 'querySelector' in document && 'addEventListener' in window && Array.prototype.forEach ) {
 
-			// NEW Selectors and variables
+			// Selectors and variables
 			options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
 			var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
 			var eventTimeout; // Timer for event throttler
@@ -187,8 +190,8 @@ window.jellyfish = (function (window, document, undefined) {
 				checkForImages( images, options ); // check if any images are visible on load
 
 				// check if any images are visible on scroll or resize
-				window.addEventListener('scroll', _eventThrottler.bind( this, eventTimeout, images, options ), false);
-				window.addEventListener('resize', _eventThrottler.bind( this, eventTimeout, images, options ), false);
+				window.addEventListener('scroll', _eventThrottler.bind( null, eventTimeout, images, options ), false);
+				window.addEventListener('resize', _eventThrottler.bind( null, eventTimeout, images, options ), false);
 
 			}
 
