@@ -16,7 +16,7 @@ A progressively enhanced image lazy loader, by [Chris Ferdinandi](http://gomaket
 
 	<script src="js/jellyfish.js"></script>
 
-Don't forget to add the img/loading.gif image to your site, too.
+Don't forget to add the `img/loading.gif` image to your site, too.
 
 ### 2. Add the markup to your HTML.
 
