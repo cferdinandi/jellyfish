@@ -90,6 +90,8 @@ Jellyfish is built with modern JavaScript APIs, and uses progressive enhancement
 
 
 ## Changelog
+* v2.1 (Feburary 25, 2014)
+  * Fixed callbacks.
 * v2.0 (February 24, 2014)
   * Better public/private method namespacing.
   * Require `init()` call to run.

@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v2.0
+	Jellyfish v2.1
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -131,7 +131,7 @@ window.jellyfish = (function (window, document, undefined) {
 		img.removeAttribute( 'data-img' );
 		img.removeAttribute( 'data-options' );
 
-		options.callbackBefore(); // Run callbacks after replacing image
+		options.callbackAfter(); // Run callbacks after replacing image
 
 	};
 
@@ -150,11 +150,9 @@ window.jellyfish = (function (window, document, undefined) {
 	// Runs functions
 	var checkForImages = function ( images, options ) {
 		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
-		options.callbackBefore(); // Run callbacks before loading images
 		Array.prototype.forEach.call(images, function (img, index) {
 			_loadImg( img, parseInt(options.offset, 10), options ); // Load each image that's in the viewport
 		});
-		options.callbackAfter(); // Run callbacks after loading images
 	};
 
 	// On window scroll and resize, only run `checkForImages` at a rate of 15fps for better performance
