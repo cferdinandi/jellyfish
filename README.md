@@ -81,7 +81,7 @@ You can also call Jellyfish's function to check for images in the viewport in yo
 
 
 
-## Brower Compatability
+## Browser Compatability
 
 Jellyfish works in all modern browsers, and IE 9 and above.
 
