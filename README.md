@@ -43,7 +43,7 @@ Jellyfish includes smart defaults and works right out of the box. But if you wan
 
 ### Global Settings
 
-You can pass options and callsbacks into Jellyfish through the `init()` function:
+You can pass options and callbacks into Jellyfish through the `init()` function:
 
 	jellyfish.init({
 		loadingIcon: 'img/loading.gif', // Image to display when image is loading
