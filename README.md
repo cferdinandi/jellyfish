@@ -105,7 +105,7 @@ Jellyfish is built with modern JavaScript APIs, and uses progressive enhancement
 
 
 ## License
-Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loading icon by (AjaxLoad)[http://www.ajaxload.info/].
+Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loading icon by [AjaxLoad](http://www.ajaxload.info/).
 
 
 
