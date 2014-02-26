@@ -109,17 +109,17 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 
 ## Changelog
-* v2.1 (Feburary 25, 2014)
-  * Fixed callbacks.
-* v2.0 (February 24, 2014)
-  * Better public/private method namespacing.
-  * Require `init()` call to run.
-  * New API exposes additional methods for use in your own scripts.
-  * Better documentation.
-* v1.1 (Feburary 19, 2014)
-  * Added an option to start loading images before they enter the viewport.
-* v1.0 (February 19, 2014)
-  * Initial release.
+* v2.1 - Feburary 25, 2014
+	* Fixed callbacks.
+* v2.0 - February 24, 2014
+	* Better public/private method namespacing.
+	* Require `init()` call to run.
+	* New API exposes additional methods for use in your own scripts.
+	* Better documentation.
+* v1.1 - Feburary 19, 2014
+	* Added an option to start loading images before they enter the viewport.
+* v1.0 - February 19, 2014
+	* Initial release.
 
 
 
