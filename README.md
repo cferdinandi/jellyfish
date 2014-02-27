@@ -117,6 +117,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 
 ## Changelog
+* v2.2 - February 27, 2014
+	* Converted `_defaults` to a literal object
 * v2.1 - Feburary 25, 2014
 	* Fixed callbacks.
 * v2.0 - February 24, 2014

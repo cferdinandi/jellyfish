@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v2.1
+	Jellyfish v2.2
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -19,15 +19,12 @@ window.jellyfish = (function (window, document, undefined) {
 	'use strict';
 
 	// Default settings
-	// Private method
-	// Returns an {object}
-	var _defaults = function () {
-		return {
-			loadingIcon: 'img/loading.gif',
-			offset: 0,
-			callbackBefore: function () {},
-			callbackAfter: function () {}
-		};
+	// Private {object} variable
+	var _defaults = {
+		loadingIcon: 'img/loading.gif',
+		offset: 0,
+		callbackBefore: function () {},
+		callbackAfter: function () {}
 	};
 
 	// Merge default settings with user options
@@ -149,7 +146,7 @@ window.jellyfish = (function (window, document, undefined) {
 	// Public method
 	// Runs functions
 	var checkForImages = function ( images, options ) {
-		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 		Array.prototype.forEach.call(images, function (img, index) {
 			_loadImg( img, parseInt(options.offset, 10), options ); // Load each image that's in the viewport
 		});
@@ -176,7 +173,7 @@ window.jellyfish = (function (window, document, undefined) {
 		if ( 'querySelector' in document && 'addEventListener' in window && Array.prototype.forEach ) {
 
 			// Selectors and variables
-			options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+			options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 			var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
 			var eventTimeout; // Timer for event throttler
 
