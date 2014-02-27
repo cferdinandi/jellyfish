@@ -93,6 +93,14 @@ jellyfish.checkForImages(
 );
 ```
 
+**Example**
+
+```javascript
+var images = document.querySelectorAll('[data-lazy-load]');
+var options = { offset: 200 };
+jellyfish.checkForImages( images, options );
+```
+
 
 
 ## Browser Compatibility
