@@ -87,11 +87,13 @@ You can even pass data attributes along to the image this way.
 You can also call Jellyfish's function to check for images in the viewport in your own scripts&mdash;useful if you've added content after the DOM has loaded:
 
 ```javascript
+// Replace placeholders with loading graphics
 jellyfish.addImgLoaders(
 	images, // A node list of image selectors. ex. document.querySelectorAll('[data-lazy-load]')
 	options // Classes and callbacks. Same options as those passed into the init() function.
 );
 
+// Load images that are in the viewport
 jellyfish.checkForImages(
 	images, // A node list of image selectors. ex. document.querySelectorAll('[data-lazy-load]')
 	options // Classes and callbacks. Same options as those passed into the init() function.
