@@ -84,16 +84,31 @@ You can even pass data attributes along to the image this way.
 
 ### Use Jellyfish events in your own scripts
 
-You can also call Jellyfish's function to check for images in the viewport in your own scripts:
+You can also call Jellyfish's function to check for images in the viewport in your own scripts&mdash;useful if you've added content after the DOM has loaded:
 
 ```javascript
+jellyfish.addImgLoaders(
+	images, // A node list of image selectors. ex. document.querySelectorAll('[data-lazy-load]')
+	options // Classes and callbacks. Same options as those passed into the init() function.
+);
+
 jellyfish.checkForImages(
 	images, // A node list of image selectors. ex. document.querySelectorAll('[data-lazy-load]')
 	options // Classes and callbacks. Same options as those passed into the init() function.
 );
 ```
 
-**Example**
+**Note:** Because Jellyfish replaces existing DOM elements with new `<img>` elements, you must redefine the `images` variable after running `addImgLoaders` and before running `checkForImages`. Otherwise, `checkForImages` won't find any nodes to load.
+
+**Example 1**
+
+```javascript
+var images = document.querySelectorAll('[data-lazy-load]');
+var options = { loadingIcon: 'img/loading.gif' };
+jellyfish.checkForImages( images, options );
+```
+
+**Example 2**
 
 ```javascript
 var images = document.querySelectorAll('[data-lazy-load]');
@@ -117,6 +132,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 
 ## Changelog
+* v2.3 - February 28, 2014
+	* Added `addImgLoaders` to publicly available methods.
 * v2.2 - February 27, 2014
 	* Converted `_defaults` to a literal object
 * v2.1 - Feburary 25, 2014

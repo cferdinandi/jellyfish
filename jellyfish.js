@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v2.2
+	Jellyfish v2.3
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -58,11 +58,12 @@ window.jellyfish = (function (window, document, undefined) {
 	};
 
 	// For each lazy load image, replace the default placeholder with a loading graphic
-	// Private method
+	// Public method
 	// Runs functions
-	var _addImgLoaders = function ( images, loadingIcon ) {
+	var addImgLoaders = function ( images, options ) {
+		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 		Array.prototype.forEach.call(images, function (img, index) {
-			_createImgLoader( img, loadingIcon );
+			_createImgLoader( img, options.loadingIcon );
 		});
 	};
 
@@ -180,7 +181,7 @@ window.jellyfish = (function (window, document, undefined) {
 			// Run Jellyfish if lazy load images exist on the page
 			if ( images.length !== 0 ) {
 
-				_addImgLoaders( images, options.loadingIcon ); // replace placeholders with loading graphics
+				addImgLoaders( images, options ); // replace placeholders with loading graphics
 				images = document.querySelectorAll('[data-lazy-load]'); // Reset image variable with new nodes
 				checkForImages( images, options ); // check if any images are visible on load
 
@@ -197,6 +198,7 @@ window.jellyfish = (function (window, document, undefined) {
 	// Return public methods
 	return {
 		init: init,
+		addImgLoaders: addImgLoaders,
 		checkForImages: checkForImages
 	};
 
