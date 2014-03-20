@@ -57,8 +57,8 @@ You can pass options and callbacks into Jellyfish through the `init()` function:
 jellyfish.init({
 	loadingIcon: 'img/loading.gif', // Image to display when image is loading
 	offset: 0, // How far below fold to begin loading images
-	callbackBefore: function () {}, // Function to run before image is replaced
-	callbackAfter: function () {} // Function to run after image is replaced
+	callbackBefore: function ( img ) {}, // Function to run before image is replaced
+	callbackAfter: function ( img ) {} // Function to run after image is replaced
 });
 ```
 
@@ -134,6 +134,9 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 
 ## Changelog
+
+* v2.4 - March 19, 2014
+	* Passed arguments into callback functions.
 * v2.3 - February 28, 2014
 	* Added `addImgLoaders` to publicly available methods.
 * v2.2 - February 27, 2014

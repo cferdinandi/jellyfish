@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v2.3
+	Jellyfish v2.4
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -121,7 +121,7 @@ window.jellyfish = (function (window, document, undefined) {
 		var newImg = img.getAttribute( 'data-lazy-load' );
 		var imgAttributes = _getDataOptions( img.getAttribute( 'data-options' ) );
 
-		options.callbackBefore(); // Run callbacks before replacing image
+		options.callbackBefore( img ); // Run callbacks before replacing image
 
 		// Replace image attributes
 		_setImgAttributes( img, imgAttributes );
@@ -129,7 +129,7 @@ window.jellyfish = (function (window, document, undefined) {
 		img.removeAttribute( 'data-img' );
 		img.removeAttribute( 'data-options' );
 
-		options.callbackAfter(); // Run callbacks after replacing image
+		options.callbackAfter( img ); // Run callbacks after replacing image
 
 	};
 
