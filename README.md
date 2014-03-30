@@ -1,5 +1,5 @@
 # Jellyfish
-A progressively enhanced image lazy loader. [View the demo](http://cferdinandi.github.io/jellyfish/).
+A progressively enhanced image and iframe lazy loader. [View the demo](http://cferdinandi.github.io/jellyfish/).
 
 **In This Documentation**
 
@@ -26,13 +26,12 @@ Don't forget to add the `img/loading.gif` image to your site, too.
 ### 2. Add the markup to your HTML.
 
 ```html
-<span data-lazy-load="img/elephant.jpg"></span>
-<a data-lazy-load="img/friends.jpg" href="img/friends.jpg">
-	View Photo
-</a>
+<div data-lazy-load="img/elephant.jpg">
+	<a href="img/elephant.jpg">View Photo</a>
+</div>
 ```
 
-You can turn any `a`, `span`, or `div` tag into an image lazy loader by adding the `[data-lazy-load]` data attribute. If users should have access to the image even if Jellyfish isn't compatible with their browser or the JavaScript file fails to load, use a link that points to the image source instead of a `span` or `div`.
+You can turn any `<p>`, `<span>`, or `<div>` tag into an image lazy loader by adding the `[data-lazy-load]` data attribute. If users should have access to the image even if Jellyfish isn't compatible with their browser or the JavaScript file fails to load, include a link that points to the image source inside the wrapper element. Jellyfish will remove it when initialized.
 
 ### 3. Initialize Jellyfish.
 
@@ -56,32 +55,65 @@ You can pass options and callbacks into Jellyfish through the `init()` function:
 
 ```javascript
 jellyfish.init({
-	loadingIcon: 'img/loading.gif', // Image to display when image is loading
+	icon: 'img/loading.gif', // Image to display when image is loading
 	offset: 0, // How far below fold to begin loading images
-	callbackBefore: function ( img ) {}, // Function to run before image is replaced
-	callbackAfter: function ( img ) {} // Function to run after image is replaced
+	type: 'img', // Type of content to load ('img' or 'iframe')
+	callbackBeforeIcons: function () {}, // Function to run before icon is loaded
+	callbackAfterIcons: function () {}, // Function to run after icon is loaded
+	callbackBeforeContent: function ( img ) {}, // Function to run before content is loaded
+	callbackAfterContent: function ( img ) {} // Function to run after content is loaded
 });
 ```
 
-### Setting Image Attributes
+### Override settings with data attributes
 
-You can set image attributes using the `[data-options]` data attribute:
+Jellyfish also lets you override global settings on a content-by-content basis using the `[data-options]` data attribute:
 
 ```html
-<a
-	data-lazy-load="img/elephant"
-	data-options="class: img-border;
-	              id: elephant;
-	              title: A picture of an elephant;
-	              height: 728;
-	              width: 1024;"
-	href="img/elephant"
+<diuv
+	data-lazy-load="img/elephant.jpg"
+	data-options="icon: img/loading-alt.gif;
+	              offset: 50;
+	              type: iframe;"
+
 >
-	View Image
-</a>
+	<a href="img/elephant.jpg">View Image</a>
+</div>
 ```
 
-You can even pass data attributes along to the image this way.
+### Setting Content Attributes
+
+You can set content attributes using the `[data-load-attributes]` data attribute:
+
+```html
+<div
+	data-lazy-load="img/elephant.jpg"
+	data-load-attributes="class: img-border;
+	                      id: elephant;
+	                      title: A picture of an elephant;
+	                      height: 728;
+	                      width: 1024;
+	                      data-name: Dumbo;"
+>
+	<a href="img/elephant.jpg">View Image</a>
+</div>
+```
+
+You can even pass data attributes along to the image or iframe this way. Here's what the example above would look like after being lazy loaded:
+
+```html
+<div data-lazy-load="img/elephant.jpg" data-load-attributes="class: img-border; id: elephant; title: A picture of an elephant; height: 728; width: 1024;">
+	<img
+		class="img-border"
+		id="elephant"
+		title="A picture of an elephant"
+		height="728"
+		width="1024"
+		data-name="Dumbo"
+		src="img/elephant.jpg"
+	>
+</div>
+```
 
 ### Use Jellyfish events in your own scripts
 
@@ -89,34 +121,32 @@ You can also call Jellyfish's function to check for images in the viewport in yo
 
 ```javascript
 // Replace placeholders with loading graphics
-jellyfish.addImgLoaders(
-	images, // A node list of image selectors. ex. document.querySelectorAll('[data-lazy-load]')
+jellyfish.addLoadingIcons(
+	wrappers, // A node list of content selectors. ex. document.querySelectorAll('[data-lazy-load]')
 	options // Classes and callbacks. Same options as those passed into the init() function.
 );
 
-// Load images that are in the viewport
-jellyfish.checkForImages(
-	images, // A node list of image selectors. ex. document.querySelectorAll('[data-lazy-load]')
+// Load content that's in the viewport
+jellyfish.checkViewport(
+	wrappers, // A node list of content selectors. ex. document.querySelectorAll('[data-lazy-load]')
 	options // Classes and callbacks. Same options as those passed into the init() function.
 );
 ```
 
-**Note:** Because Jellyfish replaces existing DOM elements with new `<img>` elements, you must redefine the `images` variable after running `addImgLoaders` and before running `checkForImages`. Otherwise, `checkForImages` won't find any nodes to load.
-
 **Example 1**
 
 ```javascript
-var images = document.querySelectorAll('[data-lazy-load]');
-var options = { loadingIcon: 'img/loading.gif' };
-jellyfish.checkForImages( images, options );
+var wrappers = document.querySelectorAll('[data-lazy-load]');
+var options = { icon: 'img/loading.gif' };
+jellyfish.addLoadingIcons( wrappers, options );
 ```
 
 **Example 2**
 
 ```javascript
-var images = document.querySelectorAll('[data-lazy-load]');
+var wrappers = document.querySelectorAll('[data-lazy-load]');
 var options = { offset: 200 };
-jellyfish.checkForImages( images, options );
+jellyfish.checkViewport( wrappers, options );
 ```
 
 
@@ -142,6 +172,12 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v3.0 - March 20, 2014
+	* [Added iframe lazy loading support.](https://github.com/cferdinandi/jellyfish/issues/3)
+	* Renamed `data-options` attribute to `data-load-attributes`.
+	* [Added options overrides on a content-by-content basis.](https://github.com/cferdinandi/jellyfish/issues/3)
+	* Added callbacks during icon loading phase.
+	* Renamed various private and public functions to account increased types of content that can be loaded.
 * v2.4 - March 19, 2014
 	* Passed arguments into callback functions.
 * v2.3 - February 28, 2014
@@ -164,4 +200,5 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Older Docs
 
+* [Version 2](https://github.com/cferdinandi/jellyfish/tree/archive-v2)
 * [Version 1](http://cferdinandi.github.io/jellyfish/archive/v1/)

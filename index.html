@@ -60,50 +60,58 @@
 			<p style="text-align: center; font-size: 1.5em;">A progressively enhanced image lazy loader.</p>
 
 			<h2>Elephant</h2>
-			<p>
-				<a data-lazy-load="sample-images/elephant.jpg" data-options="class: img-photo; height: 791; width: 1024; title: An elephant on a tarp" href="img/elephant.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/elephant.jpg" data-load-attributes="class: img-photo; height: 791; width: 1024; title: An elephant on a tarp">
+				<a href="sample-images/elephant.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>Friends</h2>
-			<p>
-				<a data-lazy-load="sample-images/friends.jpg" data-options="class: img-rounded; title: Two photos sharing a drink" href="img/friends.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/friends.jpg" data-load-attributes="class: img-rounded; title: Two photos sharing a drink">
+				<a href="sample-images/friends.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>Ice Skaters</h2>
-			<p>
-				<a data-lazy-load="sample-images/ice-skates.jpg" data-options="class: img-photo img-rounded; title: Old-timey ice skaters" href="img/ice-skates.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/ice-skates.jpg" data-load-attributes="class: img-photo img-rounded; title: Old-timey ice skaters">
+				<a href="sample-images/ice-skates.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>An Awesome Mustache</h2>
-			<p>
-				<a data-lazy-load="sample-images/mustache.jpg" data-options="title: An awesome mustache" href="img/mustache.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/mustache.jpg" data-load-attributes="title: An awesome mustache">
+				<a href="sample-images/mustache.jpg">View Photo</a>
+			</p>
+
+			<br><br>
+
+			<h2>YouTube Video</h2>
+
+			<p data-lazy-load="http://www.youtube.com/embed/8qjge9U_MiA" data-options="type: iframe;" data-load-attributes="width: 560; height: 315; frameborder: 0;">
+				<a href="https://www.youtube.com/watch?v=8qjge9U_MiA">View Video</a>
 			</p>
 
 			<br><br>
 
 			<h2>Puppy</h2>
-			<p>
-				<a data-lazy-load="sample-images/puppy.jpg" href="img/puppy.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/puppy.jpg">
+				<a href="sample-images/puppy.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>Runners</h2>
-			<p>
-				<a data-lazy-load="sample-images/runners.jpg" href="img/runners.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/runners.jpg">
+				<a href="sample-images/runners.jpg">View Photo</a>
 			</p>
 
 			<br><br>
 
 			<h2>Sailors</h2>
-			<p>
-				<a data-lazy-load="sample-images/sailors.jpg" href="img/sailors.jpg">View Photo</a>
+			<p data-lazy-load="sample-images/sailors.jpg">
+				<a href="sample-images/sailors.jpg">View Photo</a>
 			</p>
 
 
@@ -112,10 +120,13 @@
 		<script src="jellyfish.js"></script>
 		<script>
 			jellyfish.init({
-				loadingIcon: 'img/loading.gif',
+				icon: 'img/loading.gif',
 				offset: 0,
-				callbackBefore: function () {},
-				callbackAfter: function () {}
+				type: 'img',
+				callbackBeforeIcons: function () {},
+				callbackAfterIcons: function () {},
+				callbackBeforeContent: function () {},
+				callbackAfterContent: function () {}
 			});
 		</script>
 
