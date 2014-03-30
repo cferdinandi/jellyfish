@@ -19,11 +19,13 @@ window.jellyfish = (function (window, document, undefined) {
 	// Default settings
 	// Private {object} variable
 	var _defaults = {
-		loadingIcon: 'img/loading.gif',
+		icon: 'img/loading.gif',
 		offset: 0,
 		type: 'img',
-		callbackBefore: function () {},
-		callbackAfter: function () {}
+		callbackBeforeIcons: function () {},
+		callbackAfterIcons: function () {},
+		callbackBeforeContent: function () {},
+		callbackAfterContent: function () {}
 	};
 
 	// Merge default settings with user options
@@ -36,30 +38,7 @@ window.jellyfish = (function (window, document, undefined) {
 		return original;
 	};
 
-	// For each lazy load image, replace the default placeholder with a loading graphic
-	// Public method
-	// Runs functions
-	var addImgLoaders = function ( images, options ) {
-		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		Array.prototype.forEach.call(images, function (img, index) {
-			// img.style.position = 'relative';
-			img.innerHTML = '<img src="' + options.loadingIcon + '">';
-		});
-	};
-
-	// Check if an image is visible in the viewport
-	// Boolean: Returns true/false
-	var _isImgInViewport = function ( img, offset ) {
-		var distance = img.getBoundingClientRect();
-		return (
-			distance.top >= 0 &&
-			distance.left >= 0 &&
-			distance.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
-			distance.right <= (window.innerWidth || document.documentElement.clientWidth)
-		);
-	};
-
-	// Convert data-load-attributes attribute into an object of key/value pairs
+	// Convert data-options and data-load-attributes values into an object of key/value pairs
 	// Private method
 	// Returns an {object}
 	var _getDataOptions = function ( options ) {
@@ -81,66 +60,94 @@ window.jellyfish = (function (window, document, undefined) {
 		}
 	};
 
-	// Pass data attribute values to the image and remove the data attribute
-	// Private method
-	// Runs functions
-	var _setImgAttributes = function ( img, attributes ) {
-		if ( attributes !== null ) {
-			for ( var key in attributes ) {
-				img.setAttribute( key, attributes[key] );
-			}
-		}
-	};
-
-	// Replace the loading graphic with the actual image
-	// Private method
-	// Runs functions
-	var _replaceImg = function ( img, options ) {
-
-		// Get image attributes
-		var newImg = document.createElement( options.type );
-		var imgSrc = img.getAttribute( 'data-lazy-load' );
-		var imgAttributes = _getDataOptions( img.getAttribute( 'data-load-attributes' ) );
-
-		options.callbackBefore( img ); // Run callbacks before replacing image
-
-		// Replace image attributes
-		_setImgAttributes( newImg, imgAttributes );
-		newImg.setAttribute( 'src', imgSrc );
-		img.replaceChild( newImg, img.firstChild );
-
-		options.callbackAfter( img ); // Run callbacks after replacing image
-
-	};
-
-	// If the image is visibile in the viewport, replace the loading graphic with the real image
-	// Private method
-	// Runs functions
-	var _loadImg = function ( img, offset, options ) {
-		if ( _isImgInViewport( img, offset ) === true && !img.hasAttribute('data-img-loaded') ) {
-			_replaceImg( img, options );
-			img.setAttribute( 'data-img-loaded', '' );
-		}
-	};
-
-	// Check if any lazy load images are visible in the viewport
+	// For each lazy load content, replace the default placeholder with a loading icon
 	// Public method
 	// Runs functions
-	var checkForImages = function ( images, options ) {
+	var addLoadingIcons = function ( wrappers, options ) {
 		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		Array.prototype.forEach.call(images, function (img, index) {
-			_loadImg( img, parseInt(options.offset, 10), options ); // Load each image that's in the viewport
+		options.callbackBeforeIcons( wrappers ); // Run callbacks before loading icons
+		Array.prototype.forEach.call(wrappers, function (wrapper, index) {
+			var overrides = _getDataOptions( wrapper.getAttribute( 'data-options' ) );
+			var icon = overrides.icon || options.icon;
+			wrapper.innerHTML = '<img src="' + icon + '">';
+		});
+		options.callbackBeforeIcons( wrappers ); // Run callbacks after loading icons
+	};
+
+	// Check if content wrapper is visible in the viewport
+	// Private method
+	// Boolean: Returns true/false
+	var _isContentInViewport = function ( wrapper, offset ) {
+		var distance = wrapper.getBoundingClientRect();
+		return (
+			distance.top >= 0 &&
+			distance.left >= 0 &&
+			distance.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
+			distance.right <= (window.innerWidth || document.documentElement.clientWidth)
+		);
+	};
+
+	// Add attributes to the content node
+	// Private method
+	// Runs functions
+	var _setContentAttributes = function ( array ) {
+		var attributes = '';
+		if ( array !== null ) {
+			for ( var key in array ) {
+				attributes = attributes + ' ' + key + '="' + array[key] + '"';
+			}
+		}
+		return attributes;
+	};
+
+	// Replace the loading icon with the actual content
+	// Private method
+	// Runs functions
+	var _loadContent = function ( wrapper, options, overrides ) {
+
+		// Get content attributes
+		overrides = overrides || _getDataOptions( wrapper.getAttribute( 'data-options' ) );
+		var src = wrapper.getAttribute( 'data-lazy-load' );
+		var getAttributes = _getDataOptions( wrapper.getAttribute( 'data-load-attributes' ) );
+		var attributes = _setContentAttributes( getAttributes );
+		var type = overrides.type || options.type;
+
+		options.callbackBeforeContent( wrapper ); // Run callbacks before loading content
+
+		// Load content
+		if ( type === 'img' ) {
+			wrapper.innerHTML = '<img ' + attributes + 'src="' + src + '">';
+		} else if ( type === 'iframe' ) {
+			wrapper.innerHTML = '<iframe ' + attributes + 'src="' + src + '"></iframe>';
+		}
+
+		options.callbackAfterContent( wrapper ); // Run callbacks after loading content
+
+	};
+
+	// Check if any lazy load content wrappers are visible in the viewport
+	// Public method
+	// Runs functions
+	var checkViewport = function ( wrappers, options ) {
+		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
+		Array.prototype.forEach.call(wrappers, function (wrapper, index) {
+			var overrides = _getDataOptions( wrapper.getAttribute( 'data-options' ) );
+			var offset = overrides.offset || options.offset;
+			if ( _isContentInViewport( wrapper, offset ) === true && !wrapper.hasAttribute('data-content-loaded') ) {
+				_loadContent( wrapper, options, overrides );
+				wrapper.setAttribute( 'data-content-loaded', true );
+			}
 		});
 	};
 
-	// On window scroll and resize, only run `checkForImages` at a rate of 15fps for better performance
+	// On window scroll and resize, only run `checkViewport` at a rate of 15fps for better performance
 	// Private method
 	// Runs functions
-	var _eventThrottler = function ( eventTimeout, images, options ) {
+	var _eventThrottler = function ( eventTimeout, wrappers, options ) {
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;
-				checkForImages( images, options );
+				checkViewport( wrappers, options );
 			}, 66);
 		}
 	};
@@ -155,18 +162,18 @@ window.jellyfish = (function (window, document, undefined) {
 
 			// Selectors and variables
 			options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-			var images = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load images
+			var wrappers = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load wrappers
 			var eventTimeout; // Timer for event throttler
 
-			// Run Jellyfish if lazy load images exist on the page
-			if ( images.length !== 0 ) {
+			// Run Jellyfish if lazy load content exist on the page
+			if ( wrappers.length !== 0 ) {
 
-				addImgLoaders( images, options ); // replace placeholders with loading graphics
-				checkForImages( images, options ); // check if any images are visible on load
+				addLoadingIcons( wrappers, options ); // replace placeholders with loading icons
+				checkViewport( wrappers, options ); // check if any content is visible on load
 
-				// check if any images are visible on scroll or resize
-				window.addEventListener('scroll', _eventThrottler.bind( null, eventTimeout, images, options ), false);
-				window.addEventListener('resize', _eventThrottler.bind( null, eventTimeout, images, options ), false);
+				// check if any content is visible on scroll or resize
+				window.addEventListener('scroll', _eventThrottler.bind( null, eventTimeout, wrappers, options ), false);
+				window.addEventListener('resize', _eventThrottler.bind( null, eventTimeout, wrappers, options ), false);
 
 			}
 
@@ -177,8 +184,8 @@ window.jellyfish = (function (window, document, undefined) {
 	// Return public methods
 	return {
 		init: init,
-		addImgLoaders: addImgLoaders,
-		checkForImages: checkForImages
+		addLoadingIcons: addLoadingIcons,
+		checkViewport: checkViewport
 	};
 
 })(window, document);
