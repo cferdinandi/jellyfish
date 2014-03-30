@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Jellyfish v2.4
+	Jellyfish v3.0
 	A progressively enhanced image lazy loader, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -9,8 +9,6 @@
 
 	Free to use under the MIT License.
 	http://gomakethings.com/mit/
-
-	// TODO: Convert various data attributes into single data-options parser
 
  * ============================================================= */
 
@@ -23,6 +21,7 @@ window.jellyfish = (function (window, document, undefined) {
 	var _defaults = {
 		loadingIcon: 'img/loading.gif',
 		offset: 0,
+		type: 'img',
 		callbackBefore: function () {},
 		callbackAfter: function () {}
 	};
@@ -37,33 +36,14 @@ window.jellyfish = (function (window, document, undefined) {
 		return original;
 	};
 
-	// Replace div, span, or link with image loading graphic
-	// Private method
-	// Runs functions
-	var _createImgLoader = function ( img, loadingIcon ) {
-
-		// Selectors and variables
-		var loadingImg = document.createElement( 'img' );
-		var dataImg = img.getAttribute( 'data-lazy-load' );
-		var dataOptions = img.getAttribute( 'data-options' );
-
-		// Set image attritibutes
-		loadingImg.setAttribute( 'data-lazy-load', dataImg );
-		if ( dataOptions !== null ) {
-			loadingImg.setAttribute( 'data-options', dataOptions );
-		}
-		loadingImg.setAttribute( 'src', loadingIcon );
-		img.parentNode.replaceChild( loadingImg, img );
-
-	};
-
 	// For each lazy load image, replace the default placeholder with a loading graphic
 	// Public method
 	// Runs functions
 	var addImgLoaders = function ( images, options ) {
 		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 		Array.prototype.forEach.call(images, function (img, index) {
-			_createImgLoader( img, options.loadingIcon );
+			// img.style.position = 'relative';
+			img.innerHTML = '<img src="' + options.loadingIcon + '">';
 		});
 	};
 
@@ -79,7 +59,7 @@ window.jellyfish = (function (window, document, undefined) {
 		);
 	};
 
-	// Convert data-options attribute into an object of key/value pairs
+	// Convert data-load-attributes attribute into an object of key/value pairs
 	// Private method
 	// Returns an {object}
 	var _getDataOptions = function ( options ) {
@@ -118,16 +98,16 @@ window.jellyfish = (function (window, document, undefined) {
 	var _replaceImg = function ( img, options ) {
 
 		// Get image attributes
-		var newImg = img.getAttribute( 'data-lazy-load' );
-		var imgAttributes = _getDataOptions( img.getAttribute( 'data-options' ) );
+		var newImg = document.createElement( options.type );
+		var imgSrc = img.getAttribute( 'data-lazy-load' );
+		var imgAttributes = _getDataOptions( img.getAttribute( 'data-load-attributes' ) );
 
 		options.callbackBefore( img ); // Run callbacks before replacing image
 
 		// Replace image attributes
-		_setImgAttributes( img, imgAttributes );
-		img.setAttribute( 'src', newImg );
-		img.removeAttribute( 'data-img' );
-		img.removeAttribute( 'data-options' );
+		_setImgAttributes( newImg, imgAttributes );
+		newImg.setAttribute( 'src', imgSrc );
+		img.replaceChild( newImg, img.firstChild );
 
 		options.callbackAfter( img ); // Run callbacks after replacing image
 
@@ -137,7 +117,7 @@ window.jellyfish = (function (window, document, undefined) {
 	// Private method
 	// Runs functions
 	var _loadImg = function ( img, offset, options ) {
-		if ( _isImgInViewport( img, offset ) === true && img.getAttribute('data-lazy-load') !== '' && !img.hasAttribute('data-img-loaded') ) {
+		if ( _isImgInViewport( img, offset ) === true && !img.hasAttribute('data-img-loaded') ) {
 			_replaceImg( img, options );
 			img.setAttribute( 'data-img-loaded', '' );
 		}
@@ -182,7 +162,6 @@ window.jellyfish = (function (window, document, undefined) {
 			if ( images.length !== 0 ) {
 
 				addImgLoaders( images, options ); // replace placeholders with loading graphics
-				images = document.querySelectorAll('[data-lazy-load]'); // Reset image variable with new nodes
 				checkForImages( images, options ); // check if any images are visible on load
 
 				// check if any images are visible on scroll or resize
