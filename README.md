@@ -58,10 +58,10 @@ jellyfish.init({
 	icon: 'img/loading.gif', // Image to display when image is loading
 	offset: 0, // How far below fold to begin loading images
 	type: 'img', // Type of content to load ('img' or 'iframe')
-	callbackBeforeIcons: function () {}, // Function to run before icon is loaded
-	callbackAfterIcons: function () {}, // Function to run after icon is loaded
-	callbackBeforeContent: function ( img ) {}, // Function to run before content is loaded
-	callbackAfterContent: function ( img ) {} // Function to run after content is loaded
+	callbackBeforeIcons: function ( wrappers ) {}, // Function to run before icon is loaded
+	callbackAfterIcons: function ( wrappers ) {}, // Function to run after icon is loaded
+	callbackBeforeContent: function ( wrapper ) {}, // Function to run before content is loaded
+	callbackAfterContent: function ( wrapper ) {} // Function to run after content is loaded
 });
 ```
 
