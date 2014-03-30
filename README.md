@@ -200,5 +200,5 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Older Docs
 
-* [Version 2](http://cferdinandi.github.io/jellyfish/archive/v2/)
+* [Version 2](https://github.com/cferdinandi/jellyfish/tree/archive-v2)
 * [Version 1](http://cferdinandi.github.io/jellyfish/archive/v1/)
