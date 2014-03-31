@@ -70,7 +70,7 @@ jellyfish.init({
 Jellyfish also lets you override global settings on a content-by-content basis using the `[data-options]` data attribute:
 
 ```html
-<diuv
+<div
 	data-lazy-load="img/elephant.jpg"
 	data-options="icon: img/loading-alt.gif;
 	              offset: 50;
