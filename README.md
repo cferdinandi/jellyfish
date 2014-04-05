@@ -1,5 +1,7 @@
 # Jellyfish
-A progressively enhanced image and iframe lazy loader. [View the demo](http://cferdinandi.github.io/jellyfish/).
+A progressively enhanced image and iframe lazy loader.
+
+[Download Jellyfish 3] / [View the demo](http://cferdinandi.github.io/jellyfish/)
 
 **In This Documentation**
 
