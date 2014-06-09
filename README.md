@@ -6,12 +6,13 @@ A progressively enhanced image and iframe lazy loader.
 **In This Documentation**
 
 1. [Getting Started](#getting-started)
-2. [Options & Settings](#options-and-settings)
-3. [Browser Compatibility](#browser-compatibility)
-4. [How to Contribute](#how-to-contribute)
-5. [License](#license)
-6. [Changelog](#changelog)
-7. [Older Docs](#older-docs)
+2. [Installing with Package Managers](#installing-with-package-managers)
+3. [Options & Settings](#options-and-settings)
+4. [Browser Compatibility](#browser-compatibility)
+5. [How to Contribute](#how-to-contribute)
+6. [License](#license)
+7. [Changelog](#changelog)
+8. [Older Docs](#older-docs)
 
 
 
@@ -44,6 +45,16 @@ You can turn any `<p>`, `<span>`, or `<div>` tag into an image lazy loader by ad
 ```
 
 In the footer of your page, after the content, initialize Jellyfish. And that's it, you're done. Nice work!
+
+
+
+## Installing with Package Managers
+
+You can install Jellyfish with your favorite package manager.
+
+* **NPM:** `npm install cferdinandi/jellyfish`
+* **Bower:** `bower install https://github.com/cferdinandi/jellyfish.git`
+* **Component:** `component install install cferdinandi/jellyfish`
 
 
 
@@ -174,6 +185,16 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v3.1.0 - June 8, 2014
+	* Added UMD support.
+	* Moved public APIs to exports variable.
+	* Improved feature test.
+	* Replaced `Array.prototype.forEach` hack with proper `forEach` function.
+	* Added a more well supported `trim` function.
+	* General code optimizations for better minification and performance.
+	* Updated to JSDoc documentation.
+	* Updated to three number versioning system.
+	* Added package manager installation info.
 * v3.0 - March 20, 2014
 	* [Added iframe lazy loading support.](https://github.com/cferdinandi/jellyfish/issues/3)
 	* Renamed `data-options` attribute to `data-load-attributes`.

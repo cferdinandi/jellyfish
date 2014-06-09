@@ -1,24 +1,38 @@
-/* =============================================================
+/**
+ *
+ * Jellyfish v3.1.0
+ * A progressively enhanced image lazy loader, by Chris Ferdinandi.
+ * http://gomakethings.com
+ *
+ * Check for image in viewport provided by "Dan".
+ * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
+ *
+ * Free to use under the MIT License.
+ * http://gomakethings.com/mit/
+ *
+ */
 
-	Jellyfish v3.0
-	A progressively enhanced image lazy loader, by Chris Ferdinandi.
-	http://gomakethings.com
-
-	Check for image in viewport provided by "Dan".
-	http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
-
-	Free to use under the MIT License.
-	http://gomakethings.com/mit/
-
- * ============================================================= */
-
-window.jellyfish = (function (window, document, undefined) {
+(function (root, factory) {
+	if ( typeof define === 'function' && define.amd ) {
+		define(factory);
+	} else if ( typeof exports === 'object' ) {
+		module.exports = factory;
+	} else {
+		root.jellyfish = factory(root); // @todo Update to plugin name
+	}
+})(this, function (root) {
 
 	'use strict';
 
+	//
+	// Variables
+	//
+
+	var exports = {}; // Object for public APIs
+	var supports = !!document.querySelector && !!root.addEventListener; // Feature test
+
 	// Default settings
-	// Private {object} variable
-	var _defaults = {
+	var defaults = {
 		icon: 'img/loading.gif',
 		offset: 0,
 		type: 'img',
@@ -28,56 +42,105 @@ window.jellyfish = (function (window, document, undefined) {
 		callbackAfterContent: function () {}
 	};
 
-	// Merge default settings with user options
-	// Private method
-	// Returns an {object}
-	var _mergeObjects = function ( original, updates ) {
-		for (var key in updates) {
-			original[key] = updates[key];
+
+	//
+	// Methods
+	//
+
+	/**
+	 * Merge defaults with user options
+	 * @private
+	 * @param {Object} defaults Default settings
+	 * @param {Object} options User options
+	 * @returns {Object} Merged values of defaults and options
+	 */
+	var extend = function ( defaults, options ) {
+		for ( var key in options ) {
+			if (Object.prototype.hasOwnProperty.call(options, key)) {
+				defaults[key] = options[key];
+			}
 		}
-		return original;
+		return defaults;
 	};
 
-	// Convert data-options and data-load-attributes values into an object of key/value pairs
-	// Private method
-	// Returns an {object}
-	var _getDataOptions = function ( options ) {
-		if ( options === null || options === undefined  ) {
-			return {};
+	/**
+	 * A simple forEach() implementation for Arrays, Objects and NodeLists
+	 * @private
+	 * @param {Array|Object|NodeList} collection Collection of items to iterate
+	 * @param {Function} callback Callback function for each iteration
+	 * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
+	 */
+	var forEach = function (collection, callback, scope) {
+		if (Object.prototype.toString.call(collection) === '[object Object]') {
+			for (var prop in collection) {
+				if (Object.prototype.hasOwnProperty.call(collection, prop)) {
+					callback.call(scope, collection[prop], prop, collection);
+				}
+			}
 		} else {
-			var settings = {}; // Create settings object
-			options = options.split(';'); // Split into array of options
+			for (var i = 0, len = collection.length; i < len; i++) {
+				callback.call(scope, collection[i], i, collection);
+			}
+		}
+	};
 
-			// Create a key/value pair for each setting
+	/**
+	 * Remove whitespace from a string
+	 * @private
+	 * @param {String} string
+	 * @returns {String}
+	 */
+	var trim = function ( string ) {
+		return string.replace(/^\s+|\s+$/g, '');
+	};
+
+	/**
+	 * Convert data-options attribute into an object of key/value pairs
+	 * @private
+	 * @param {String} options Link-specific options as a data attribute string
+	 * @returns {Object}
+	 */
+	var getDataOptions = function ( options ) {
+		var settings = {};
+		// Create a key/value pair for each setting
+		if ( options ) {
+			options = options.split(';');
 			options.forEach( function(option) {
-				option = option.trim();
+				option = trim(option);
 				if ( option !== '' ) {
 					option = option.split(':');
-					settings[option[0]] = option[1].trim();
+					settings[option[0]] = trim(option[1]);
 				}
 			});
-			return settings;
 		}
+		return settings;
 	};
 
-	// For each lazy load content, replace the default placeholder with a loading icon
-	// Public method
-	// Runs functions
-	var addLoadingIcons = function ( wrappers, options ) {
-		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		options.callbackBeforeIcons( wrappers ); // Run callbacks before loading icons
-		Array.prototype.forEach.call(wrappers, function (wrapper, index) {
-			var overrides = _getDataOptions( wrapper.getAttribute( 'data-options' ) );
-			var icon = overrides.icon || options.icon;
+	/**
+	 * For each lazy load content, replace the default placeholder with a loading icon
+	 * @public
+	 * @param {NodeList} wrappers A nodelist of wrapper elements around each image
+	 * @param {Object} options
+	 */
+	exports.addLoadingIcons = function ( wrappers, options ) {
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		settings.callbackBeforeIcons( wrappers ); // Run callbacks before loading icons
+		forEach(wrappers, function (wrapper) {
+			var overrides = getDataOptions( wrapper.getAttribute( 'data-options' ) );
+			var icon = overrides.icon || settings.icon;
 			wrapper.innerHTML = '<img src="' + icon + '">';
 		});
-		options.callbackBeforeIcons( wrappers ); // Run callbacks after loading icons
+		settings.callbackBeforeIcons( wrappers ); // Run callbacks after loading icons
 	};
 
-	// Check if content wrapper is visible in the viewport
-	// Private method
-	// Boolean: Returns true/false
-	var _isContentInViewport = function ( wrapper, offset ) {
+	/**
+	 * Check if the content wrapper is visible in the viewport
+	 * @private
+	 * @param  {Element} wrapper The element that contains the image to load
+	 * @param  {Number}  offset The number of pixels before the viewport to start loading the image
+	 * @return {Boolean} True when image is in viewport
+	 */
+	var isContentInViewport = function ( wrapper, offset ) {
 		var distance = wrapper.getBoundingClientRect();
 		return (
 			distance.top >= 0 &&
@@ -87,10 +150,12 @@ window.jellyfish = (function (window, document, undefined) {
 		);
 	};
 
-	// Add attributes to the content node
-	// Private method
-	// Runs functions
-	var _setContentAttributes = function ( array ) {
+	/**
+	 * Add attributes to the content node
+	 * @private
+	 * @param {Array} array An array of node attributes
+	 */
+	var setContentAttributes = function ( array ) {
 		var attributes = '';
 		if ( array !== null ) {
 			for ( var key in array ) {
@@ -100,92 +165,101 @@ window.jellyfish = (function (window, document, undefined) {
 		return attributes;
 	};
 
-	// Replace the loading icon with the actual content
-	// Private method
-	// Runs functions
-	var _loadContent = function ( wrapper, options, overrides ) {
+	/**
+	 * Replace the loading icon with the actual content
+	 * @private
+	 * @param  {Element} wrapper The element that contains the content
+	 * @param  {Object} settings
+	 * @param  {Object} overrides
+	 */
+	var loadContent = function ( wrapper, settings, overrides ) {
 
 		// Get content attributes
-		overrides = overrides || _getDataOptions( wrapper.getAttribute( 'data-options' ) );
+		overrides = overrides || getDataOptions( wrapper.getAttribute( 'data-options' ) );
 		var src = wrapper.getAttribute( 'data-lazy-load' );
-		var getAttributes = _getDataOptions( wrapper.getAttribute( 'data-load-attributes' ) );
-		var attributes = _setContentAttributes( getAttributes );
-		var type = overrides.type || options.type;
+		var getAttributes = getDataOptions( wrapper.getAttribute( 'data-load-attributes' ) );
+		var attributes = setContentAttributes( getAttributes );
+		var type = overrides.type || settings.type;
 
-		options.callbackBeforeContent( wrapper ); // Run callbacks before loading content
+		settings.callbackBeforeContent( wrapper ); // Run callbacks before loading content
 
 		// Load content
-		if ( type === 'img' ) {
+		if ( type.toLowerCase() === 'img' ) {
 			wrapper.innerHTML = '<img ' + attributes + 'src="' + src + '">';
-		} else if ( type === 'iframe' ) {
+		} else if ( type.toLowerCase() === 'iframe' ) {
 			wrapper.innerHTML = '<iframe ' + attributes + 'src="' + src + '"></iframe>';
 		}
 
-		options.callbackAfterContent( wrapper ); // Run callbacks after loading content
+		settings.callbackAfterContent( wrapper ); // Run callbacks after loading content
 
 	};
 
-	// Check if any lazy load content wrappers are visible in the viewport
-	// Public method
-	// Runs functions
-	var checkViewport = function ( wrappers, options ) {
-		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		Array.prototype.forEach.call(wrappers, function (wrapper, index) {
-			var overrides = _getDataOptions( wrapper.getAttribute( 'data-options' ) );
-			var offset = overrides.offset || options.offset;
-			if ( _isContentInViewport( wrapper, offset ) === true && !wrapper.hasAttribute('data-content-loaded') ) {
-				_loadContent( wrapper, options, overrides );
+	/**
+	 * Check if any lazy load content wrappers are visibile in the viewport
+	 * @public
+	 * @param  {NodeList} wrappers A nodelist of elements that contain content
+	 * @param  {Object} options
+	 */
+	exports.checkViewport = function ( wrappers, options ) {
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		forEach(wrappers, function (wrapper) {
+			var overrides = getDataOptions( wrapper.getAttribute( 'data-options' ) );
+			var offset = overrides.offset || settings.offset;
+			if ( isContentInViewport( wrapper, offset ) === true && !wrapper.hasAttribute('data-content-loaded') ) {
+				loadContent( wrapper, settings, overrides );
 				wrapper.setAttribute( 'data-content-loaded', true );
 			}
 		});
 	};
 
-	// On window scroll and resize, only run `checkViewport` at a rate of 15fps for better performance
-	// Private method
-	// Runs functions
-	var _eventThrottler = function ( eventTimeout, wrappers, options ) {
+	/**
+	 * On window scroll and resize, only run `checkViewport` at a rate of 15fps for better performance
+	 * @private
+	 * @param  {Function} eventTimeout Timeout function
+	 * @param  {NodeList} wrappers The nodelist of elements that contain lazy load content
+	 * @param  {Object} settings
+	 */
+	var eventThrottler = function ( eventTimeout, wrappers, settings ) {
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;
-				checkViewport( wrappers, options );
+				exports.checkViewport( wrappers, settings );
 			}, 66);
 		}
 	};
 
-	// Initalize Jellyfish
-	// Public method
-	// Runs functions
-	var init = function ( options ) {
+	/**
+	 * Initialize Plugin
+	 * @public
+	 * @param {Object} options User settings
+	 */
+	exports.init = function ( options ) {
 
-		// Feature test before initializing
-		if ( 'querySelector' in document && 'addEventListener' in window && Array.prototype.forEach ) {
+		// feature test
+		if ( !supports ) return;
 
-			// Selectors and variables
-			options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-			var wrappers = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load wrappers
-			var eventTimeout; // Timer for event throttler
+		// Selectors and variables
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var wrappers = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load wrappers
+		var eventTimeout; // Timer for event throttler
 
-			// Run Jellyfish if lazy load content exist on the page
-			if ( wrappers.length !== 0 ) {
+		// Stop init if no lazy load content is found
+		if ( wrappers.length === 0 ) return;
 
-				addLoadingIcons( wrappers, options ); // replace placeholders with loading icons
-				checkViewport( wrappers, options ); // check if any content is visible on load
+		exports.addLoadingIcons( wrappers, settings ); // replace placeholders with loading icons
+		exports.checkViewport( wrappers, settings ); // check if any content is visible on load
 
-				// check if any content is visible on scroll or resize
-				window.addEventListener('scroll', _eventThrottler.bind( null, eventTimeout, wrappers, options ), false);
-				window.addEventListener('resize', _eventThrottler.bind( null, eventTimeout, wrappers, options ), false);
-
-			}
-
-		}
+		// check if any content is visible on scroll or resize
+		window.addEventListener('scroll', eventThrottler.bind( null, eventTimeout, wrappers, settings ), false);
+		window.addEventListener('resize', eventThrottler.bind( null, eventTimeout, wrappers, settings ), false);
 
 	};
 
-	// Return public methods
-	return {
-		init: init,
-		addLoadingIcons: addLoadingIcons,
-		checkViewport: checkViewport
-	};
 
-})(window, document);
+	//
+	// Public APIs
+	//
+
+	return exports;
+
+});
