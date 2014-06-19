@@ -14,11 +14,11 @@
 
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
-		define(factory);
+		define('jellyfish', factory(root));
 	} else if ( typeof exports === 'object' ) {
-		module.exports = factory;
+		module.exports = factory(root);
 	} else {
-		root.jellyfish = factory(root); // @todo Update to plugin name
+		root.jellyfish = factory(root);
 	}
 })(this, function (root) {
 

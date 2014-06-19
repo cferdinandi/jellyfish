@@ -54,7 +54,7 @@ You can install Jellyfish with your favorite package manager.
 
 * **NPM:** `npm install cferdinandi/jellyfish`
 * **Bower:** `bower install https://github.com/cferdinandi/jellyfish.git`
-* **Component:** `component install install cferdinandi/jellyfish`
+* **Component:** `component install cferdinandi/jellyfish`
 
 
 
@@ -185,6 +185,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v3.1.1 - June 19, 2014
+	* Fixed factory/root/UMD definition.
 * v3.1.0 - June 8, 2014
 	* Added UMD support.
 	* Moved public APIs to exports variable.
