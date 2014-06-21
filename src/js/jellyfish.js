@@ -1,17 +1,3 @@
-/**
- *
- * Jellyfish v3.1.0
- * A progressively enhanced image lazy loader, by Chris Ferdinandi.
- * http://gomakethings.com
- *
- * Check for image in viewport provided by "Dan".
- * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
- *
- * Free to use under the MIT License.
- * http://gomakethings.com/mit/
- *
- */
-
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
 		define('jellyfish', factory(root));

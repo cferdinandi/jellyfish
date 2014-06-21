@@ -1,4 +1,4 @@
-# Jellyfish
+# Jellyfish [![Build Status](https://travis-ci.org/cferdinandi/jellyfish.svg)](https://travis-ci.org/cferdinandi/jellyfish)
 A progressively enhanced image and iframe lazy loader.
 
 [Download Jellyfish 3](https://github.com/cferdinandi/jellyfish/archive/master.zip) / [View the demo](http://cferdinandi.github.io/jellyfish/)
@@ -17,6 +17,8 @@ A progressively enhanced image and iframe lazy loader.
 
 
 ## Getting Started
+
+Compiled and production-ready code can be found in the `dist` directory. The `src` directory contains development code. Unit tests are located in the `test` directory.
 
 ### 1. Include Jellyfish on your site.
 
@@ -185,6 +187,11 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v3.2.0 - June 20, 2014
+	* Converted to gulp.js workflow.
+	* Added unit testing.
+	* Updated naming conventions.
+	* Added minified versions of files.
 * v3.1.1 - June 19, 2014
 	* Fixed factory/root/UMD definition.
 * v3.1.0 - June 8, 2014
