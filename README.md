@@ -187,6 +187,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v3.2.1 - June 28, 2014
+	* Fixed `extend()` method.
 * v3.2.0 - June 20, 2014
 	* Converted to gulp.js workflow.
 	* Added unit testing.
