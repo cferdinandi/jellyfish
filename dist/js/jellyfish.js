@@ -1,5 +1,5 @@
 /**
- * Jellyfish v3.2.1
+ * Jellyfish v4.0.0
  * A progressively enhanced image lazy loader, by Chris Ferdinandi.
  * http://github.com/cferdinandi/jellyfish
  * 
@@ -83,35 +83,13 @@
 	};
 
 	/**
-	 * Remove whitespace from a string
-	 * @private
-	 * @param {String} string
-	 * @returns {String}
-	 */
-	var trim = function ( string ) {
-		return string.replace(/^\s+|\s+$/g, '');
-	};
-
-	/**
 	 * Convert data-options attribute into an object of key/value pairs
 	 * @private
-	 * @param {String} options Link-specific options as a data attribute string
+	 * @param {Object} options Link-specific options
 	 * @returns {Object}
 	 */
 	var getDataOptions = function ( options ) {
-		var settings = {};
-		// Create a key/value pair for each setting
-		if ( options ) {
-			options = options.split(';');
-			options.forEach( function(option) {
-				option = trim(option);
-				if ( option !== '' ) {
-					option = option.split(':');
-					settings[option[0]] = trim(option[1]);
-				}
-			});
-		}
-		return settings;
+		return !options || !(typeof JSON === 'object' && typeof JSON.parse === 'function') ? {} : JSON.parse( options );
 	};
 
 	/**

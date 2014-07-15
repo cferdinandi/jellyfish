@@ -1,7 +1,7 @@
 # Jellyfish [![Build Status](https://travis-ci.org/cferdinandi/jellyfish.svg)](https://travis-ci.org/cferdinandi/jellyfish)
 A progressively enhanced image and iframe lazy loader.
 
-[Download Jellyfish 3](https://github.com/cferdinandi/jellyfish/archive/master.zip) / [View the demo](http://cferdinandi.github.io/jellyfish/)
+[Download Jellyfish](https://github.com/cferdinandi/jellyfish/archive/master.zip) / [View the demo](http://cferdinandi.github.io/jellyfish/)
 
 **In This Documentation**
 
@@ -87,28 +87,33 @@ Jellyfish also lets you override global settings on a content-by-content basis u
 ```html
 <div
 	data-lazy-load="img/elephant.jpg"
-	data-options="icon: img/loading-alt.gif;
-	              offset: 50;
-	              type: iframe;"
-
+	data-options='{
+		"icon": "img/loading-alt.gif",
+		"offset": 50,
+		"type": "iframe"
+	}'
 >
 	<a href="img/elephant.jpg">View Image</a>
 </div>
 ```
 
+**Note:** You must use [valid JSON](http://jsonlint.com/) in order for the `data-options` overrides to work.
+
 ### Setting Content Attributes
 
-You can set content attributes using the `[data-load-attributes]` data attribute:
+You can set content attributes using the `[data-load-attributes]` data attribute.
 
 ```html
 <div
 	data-lazy-load="img/elephant.jpg"
-	data-load-attributes="class: img-border;
-	                      id: elephant;
-	                      title: A picture of an elephant;
-	                      height: 728;
-	                      width: 1024;
-	                      data-name: Dumbo;"
+	data-load-attributes='{
+		"class": "img-border",
+		"id": "elephant",
+		"title": "A picture of an elephant",
+		"height": 728,
+		"width:": 1024,
+		"data-name": "Dumbo"
+	}'
 >
 	<a href="img/elephant.jpg">View Image</a>
 </div>
@@ -117,7 +122,7 @@ You can set content attributes using the `[data-load-attributes]` data attribute
 You can even pass data attributes along to the image or iframe this way. Here's what the example above would look like after being lazy loaded:
 
 ```html
-<div data-lazy-load="img/elephant.jpg" data-load-attributes="class: img-border; id: elephant; title: A picture of an elephant; height: 728; width: 1024;">
+<div data-lazy-load="img/elephant.jpg" data-load-attributes='{"class": "img-border", "id": "elephant", "title": "A picture of an elephant", "height": 728, "width": 1024'>
 	<img
 		class="img-border"
 		id="elephant"
@@ -130,25 +135,23 @@ You can even pass data attributes along to the image or iframe this way. Here's 
 </div>
 ```
 
+**Note:** You must use [valid JSON](http://jsonlint.com/) in order for the `data-attributes` feature to work.
+
 ### Use Jellyfish events in your own scripts
 
-You can also call Jellyfish's function to check for images in the viewport in your own scripts&mdash;useful if you've added content after the DOM has loaded:
+You can also call Jellyfish methods to add loading icons and check for images in the viewport in your own scripts&mdash;useful if you've added content after the DOM has loaded.
+
+### addLoadingIcons()
+Replace placeholder elements with loading icons.
 
 ```javascript
-// Replace placeholders with loading graphics
 jellyfish.addLoadingIcons(
-	wrappers, // A node list of content selectors. ex. document.querySelectorAll('[data-lazy-load]')
-	options // Classes and callbacks. Same options as those passed into the init() function.
-);
-
-// Load content that's in the viewport
-jellyfish.checkViewport(
 	wrappers, // A node list of content selectors. ex. document.querySelectorAll('[data-lazy-load]')
 	options // Classes and callbacks. Same options as those passed into the init() function.
 );
 ```
 
-**Example 1**
+**Example**
 
 ```javascript
 var wrappers = document.querySelectorAll('[data-lazy-load]');
@@ -156,12 +159,29 @@ var options = { icon: 'img/loading.gif' };
 jellyfish.addLoadingIcons( wrappers, options );
 ```
 
-**Example 2**
+### checkViewport()
+Check if any images are currently visibile in the viewport.
+
+```javascript
+jellyfish.checkViewport(
+	wrappers, // A node list of content selectors. ex. document.querySelectorAll('[data-lazy-load]')
+	options // Classes and callbacks. Same options as those passed into the init() function.
+);
+```
+
+**Example**
 
 ```javascript
 var wrappers = document.querySelectorAll('[data-lazy-load]');
 var options = { offset: 200 };
 jellyfish.checkViewport( wrappers, options );
+```
+
+#### destroy()
+Destroy the current `jellyfish.init()`.
+
+```javascript
+jellyfish.destroy();
 ```
 
 
@@ -187,6 +207,9 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v4.0.0 - July 1, 2014
+	* Updated `getDataOptions()` method to use JSON.
+	* Fixed link support.
 * v3.2.1 - June 28, 2014
 	* Fixed `extend()` method.
 * v3.2.0 - June 20, 2014
