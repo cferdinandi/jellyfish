@@ -1,5 +1,5 @@
 /**
- * Jellyfish v4.0.0
+ * Jellyfish v4.0.1
  * A progressively enhanced image lazy loader, by Chris Ferdinandi.
  * http://github.com/cferdinandi/jellyfish
  * 

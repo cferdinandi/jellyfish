@@ -23,10 +23,11 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 ### 1. Include Jellyfish on your site.
 
 ```html
-<script src="js/jellyfish.js"></script>
+<script src="dist/js/bind-polyfill.js"></script>
+<script src="dist/js/jellyfish.js"></script>
 ```
 
-Don't forget to add the `img/loading.gif` image to your site, too.
+Jellyfish requires `bind-polyfill.js`, a polyfill that extends ECMAScript 5 API support to more browsers. Don't forget to add the `img/loading.gif` image to your site, too.
 
 ### 2. Add the markup to your HTML.
 
@@ -207,6 +208,9 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v4.0.1 - August 8, 2014
+	* Added polyfill for `Functions.prototype.bind`.
+	* Removed Sass paths from `gulpfile.js`.
 * v4.0.0 - July 1, 2014
 	* Updated `getDataOptions()` method to use JSON.
 	* Fixed link support.
