@@ -14,7 +14,7 @@
 	// Variables
 	//
 
-	var exports = {}; // Object for public APIs
+	var jellyfish = {}; // Object for public APIs
 	var supports = !!document.querySelector && !!root.addEventListener; // Feature test
 	var settings;
 
@@ -89,7 +89,7 @@
 	 * @param {NodeList} wrappers A nodelist of wrapper elements around each image
 	 * @param {Object} options
 	 */
-	exports.addLoadingIcons = function ( wrappers, options ) {
+	jellyfish.addLoadingIcons = function ( wrappers, options ) {
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		settings.callbackBeforeIcons( wrappers ); // Run callbacks before loading icons
 		forEach(wrappers, function (wrapper) {
@@ -167,7 +167,7 @@
 	 * @param  {NodeList} wrappers A nodelist of elements that contain content
 	 * @param  {Object} options
 	 */
-	exports.checkViewport = function ( wrappers, options ) {
+	jellyfish.checkViewport = function ( wrappers, options ) {
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		forEach(wrappers, function (wrapper) {
 			var overrides = getDataOptions( wrapper.getAttribute( 'data-options' ) );
@@ -190,7 +190,7 @@
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;
-				exports.checkViewport( wrappers, settings );
+				jellyfish.checkViewport( wrappers, settings );
 			}, 66);
 		}
 	};
@@ -200,7 +200,7 @@
 	 * @public
 	 * @param {Object} options User settings
 	 */
-	exports.init = function ( options ) {
+	jellyfish.init = function ( options ) {
 
 		// feature test
 		if ( !supports ) return;
@@ -213,8 +213,8 @@
 		// Stop init if no lazy load content is found
 		if ( wrappers.length === 0 ) return;
 
-		exports.addLoadingIcons( wrappers, settings ); // replace placeholders with loading icons
-		exports.checkViewport( wrappers, settings ); // check if any content is visible on load
+		jellyfish.addLoadingIcons( wrappers, settings ); // replace placeholders with loading icons
+		jellyfish.checkViewport( wrappers, settings ); // check if any content is visible on load
 
 		// check if any content is visible on scroll or resize
 		window.addEventListener('scroll', eventThrottler.bind( null, eventTimeout, wrappers, settings ), false);
@@ -227,6 +227,6 @@
 	// Public APIs
 	//
 
-	return exports;
+	return jellyfish;
 
 });

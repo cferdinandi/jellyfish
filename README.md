@@ -208,6 +208,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 ## Changelog
 
+* v4.0.2 - August 15, 2014
+	* Added fix for UMD structure.
 * v4.0.1 - August 8, 2014
 	* Added polyfill for `Functions.prototype.bind`.
 	* Removed Sass paths from `gulpfile.js`.
