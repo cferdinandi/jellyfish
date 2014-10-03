@@ -7,12 +7,13 @@ A progressively enhanced image and iframe lazy loader.
 
 1. [Getting Started](#getting-started)
 2. [Installing with Package Managers](#installing-with-package-managers)
-3. [Options & Settings](#options-and-settings)
-4. [Browser Compatibility](#browser-compatibility)
-5. [How to Contribute](#how-to-contribute)
-6. [License](#license)
-7. [Changelog](#changelog)
-8. [Older Docs](#older-docs)
+3. [Working with the Source Files](#working-with-the-source-files)
+4. [Options & Settings](#options-and-settings)
+5. [Browser Compatibility](#browser-compatibility)
+6. [How to Contribute](#how-to-contribute)
+7. [License](#license)
+8. [Changelog](#changelog)
+9. [Older Docs](#older-docs)
 
 
 
@@ -58,6 +59,28 @@ You can install Jellyfish with your favorite package manager.
 * **NPM:** `npm install cferdinandi/jellyfish`
 * **Bower:** `bower install https://github.com/cferdinandi/jellyfish.git`
 * **Component:** `component install cferdinandi/jellyfish`
+
+
+
+## Working with the Source Files
+
+If you would prefer, you can work with the development code in the `src` directory using the included [Gulp build system](http://gulpjs.com/). This compiles, lints, and minifies code, and runs unit tests.
+
+### Dependencies
+Make sure these are installed first.
+
+* [Node.js](http://nodejs.org)
+* [Ruby Sass](http://sass-lang.com/install)
+* [Gulp](http://gulpjs.com) `sudo npm install -g gulp`
+* [PhantomJS](http://phantomjs.org)
+
+### Quick Start
+
+1. In bash/terminal/command line, `cd` into your project directory.
+2. Run `npm install` to install required files.
+3. When it's done installing, run `gulp` to get going.
+
+Every time you want to run your tasks, run `gulp`.
 
 
 
@@ -179,7 +202,7 @@ jellyfish.checkViewport( wrappers, options );
 ```
 
 #### destroy()
-Destroy the current `jellyfish.init()`.
+Destroy the current `jellyfish.init()`. This is called automatically during the init function to remove any existing initializations.
 
 ```javascript
 jellyfish.destroy();
@@ -210,6 +233,9 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 Jellyfish uses [semantic versioning](http://semver.org/).
 
+* v4.0.3 - October 2, 2014
+	* Fixed CommonJS bug.
+	* Added lazypipe to `gulpfile.js`.
 * v4.0.2 - August 15, 2014
 	* Added fix for UMD structure.
 * v4.0.1 - August 8, 2014
