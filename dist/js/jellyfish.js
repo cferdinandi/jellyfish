@@ -1,5 +1,5 @@
 /**
- * Jellyfish v4.0.3
+ * Jellyfish v4.0.4
  * A progressively enhanced image lazy loader, by Chris Ferdinandi.
  * http://github.com/cferdinandi/jellyfish
  * 
@@ -25,7 +25,7 @@
 
 	var jellyfish = {}; // Object for public APIs
 	var supports = !!document.querySelector && !!root.addEventListener; // Feature test
-	var settings;
+	var settings, wrappers, eventTimeout;
 
 	// Default settings
 	var defaults = {
@@ -216,8 +216,7 @@
 
 		// Selectors and variables
 		settings = extend( defaults, options || {} ); // Merge user options with defaults
-		var wrappers = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load wrappers
-		var eventTimeout; // Timer for event throttler
+		wrappers = document.querySelectorAll('[data-lazy-load]'); // Get all lazy load wrappers
 
 		// Stop init if no lazy load content is found
 		if ( wrappers.length === 0 ) return;
@@ -226,8 +225,8 @@
 		jellyfish.checkViewport( wrappers, settings ); // check if any content is visible on load
 
 		// check if any content is visible on scroll or resize
-		window.addEventListener('scroll', eventThrottler.bind( null, eventTimeout, wrappers, settings ), false);
-		window.addEventListener('resize', eventThrottler.bind( null, eventTimeout, wrappers, settings ), false);
+		window.addEventListener('scroll', eventThrottler, false);
+		window.addEventListener('resize', eventThrottler, false);
 
 	};
 

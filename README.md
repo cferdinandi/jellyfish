@@ -233,6 +233,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 Jellyfish uses [semantic versioning](http://semver.org/).
 
+* v4.0.4 - October 17, 2014
+	* Fixed bug that caused `eventTimeout` to always be null.
 * v4.0.3 - October 2, 2014
 	* Fixed CommonJS bug.
 	* Added lazypipe to `gulpfile.js`.
