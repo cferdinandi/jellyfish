@@ -1,5 +1,5 @@
 /**
- * Jellyfish v4.0.4
+ * Jellyfish v4.0.5
  * A progressively enhanced image lazy loader, by Chris Ferdinandi.
  * http://github.com/cferdinandi/jellyfish
  * 
@@ -195,7 +195,8 @@
 	 * @param  {NodeList} wrappers The nodelist of elements that contain lazy load content
 	 * @param  {Object} settings
 	 */
-	var eventThrottler = function ( eventTimeout, wrappers, settings ) {
+	var eventThrottler = function () {
+		console.log(eventTimeout);
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;

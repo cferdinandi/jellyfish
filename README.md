@@ -24,11 +24,10 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 ### 1. Include Jellyfish on your site.
 
 ```html
-<script src="dist/js/bind-polyfill.js"></script>
 <script src="dist/js/jellyfish.js"></script>
 ```
 
-Jellyfish requires `bind-polyfill.js`, a polyfill that extends ECMAScript 5 API support to more browsers. Don't forget to add the `img/loading.gif` image to your site, too.
+Don't forget to add the `img/loading.gif` image to your site, too.
 
 ### 2. Add the markup to your HTML.
 
@@ -233,6 +232,9 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 Jellyfish uses [semantic versioning](http://semver.org/).
 
+* v4.0.5 - October 17, 2014
+	* Actually fixed bug that caused `eventTimeout` to always be null.
+	* Removed `.bind` dependency and polyfill.
 * v4.0.4 - October 17, 2014
 	* Fixed bug that caused `eventTimeout` to always be null.
 * v4.0.3 - October 2, 2014
