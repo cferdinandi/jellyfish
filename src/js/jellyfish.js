@@ -186,7 +186,8 @@
 	 * @param  {NodeList} wrappers The nodelist of elements that contain lazy load content
 	 * @param  {Object} settings
 	 */
-	var eventThrottler = function ( eventTimeout, wrappers, settings ) {
+	var eventThrottler = function () {
+		console.log(eventTimeout);
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;
