@@ -231,6 +231,8 @@ Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loa
 
 Jellyfish uses [semantic versioning](http://semver.org/).
 
+* v4.0.7 - March 6, 2015
+	* Fixed AMD wrapper window variable.
 * v4.0.6 - October 17, 2014
 	* Removed `.bind` dependency and polyfill.
 	* Updated `gulpfile.js` tasks and namespacing.
