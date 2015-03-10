@@ -1,5 +1,5 @@
 /**
- * Jellyfish v4.0.7
+ * Jellyfish v4.0.8
  * A progressively enhanced image lazy loader, by Chris Ferdinandi.
  * http://github.com/cferdinandi/jellyfish
  * 
@@ -9,13 +9,13 @@
 
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
-		define([], factory);
+		define([], factory(root));
 	} else if ( typeof exports === 'object' ) {
-		module.exports = factory;
+		module.exports = factory(root);
 	} else {
 		root.jellyfish = factory(root);
 	}
-})(this, function (window) {
+})(this, function (root) {
 
 	'use strict';
 
@@ -24,7 +24,7 @@
 	//
 
 	var jellyfish = {}; // Object for public APIs
-	var supports = !!document.querySelector && !!window.addEventListener; // Feature test
+	var supports = !!document.querySelector && !!root.addEventListener; // Feature test
 	var settings, wrappers, eventTimeout;
 
 	// Default settings
@@ -121,8 +121,8 @@
 		return (
 			distance.top >= 0 &&
 			distance.left >= 0 &&
-			distance.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
-			distance.right <= (window.innerWidth || document.documentElement.clientWidth)
+			distance.bottom <= (root.innerHeight + offset || document.documentElement.clientHeight + offset) &&
+			distance.right <= (root.innerWidth || document.documentElement.clientWidth)
 		);
 	};
 
@@ -226,8 +226,8 @@
 		jellyfish.checkViewport( wrappers, settings ); // check if any content is visible on load
 
 		// check if any content is visible on scroll or resize
-		window.addEventListener('scroll', eventThrottler, false);
-		window.addEventListener('resize', eventThrottler, false);
+		root.addEventListener('scroll', eventThrottler, false);
+		root.addEventListener('resize', eventThrottler, false);
 
 	};
 
