@@ -1,6 +1,6 @@
 {
 	"name": "Jellyfish",
-	"version": "4.0.8",
+	"version": "4.0.9",
 	"description": "A progressively enhanced image lazy loader",
 	"main": "./dist",
 	"author": {

@@ -1,5 +1,5 @@
 /**
- * Jellyfish v4.0.8
+ * Jellyfish v4.0.9
  * A progressively enhanced image lazy loader, by Chris Ferdinandi.
  * http://github.com/cferdinandi/jellyfish
  * 
@@ -15,7 +15,7 @@
 	} else {
 		root.jellyfish = factory(root);
 	}
-})(this, function (root) {
+})(typeof global !== "undefined" ? global : this.window || this.global, function (root) {
 
 	'use strict';
 
