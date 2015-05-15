@@ -12,8 +12,7 @@ A progressively enhanced image and iframe lazy loader.
 5. [Browser Compatibility](#browser-compatibility)
 6. [How to Contribute](#how-to-contribute)
 7. [License](#license)
-8. [Changelog](#changelog)
-9. [Older Docs](#older-docs)
+8. [Older Docs](#older-docs)
 
 
 
@@ -224,80 +223,6 @@ In lieu of a formal style guide, take care to maintain the existing coding style
 
 ## License
 Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loading icon by [AjaxLoad](http://www.ajaxload.info/).
-
-
-
-## Changelog
-
-Jellyfish uses [semantic versioning](http://semver.org/).
-
-* v4.0.9 - May 13, 2015
-	* Fixed Browserify `window` bug.
-* v4.0.8 - March 9, 2015
-	* REALLY fixed UMD wrapper.
-* v4.0.7 - March 6, 2015
-	* Fixed AMD wrapper window variable.
-* v4.0.6 - October 17, 2014
-	* Removed `.bind` dependency and polyfill.
-	* Updated `gulpfile.js` tasks and namespacing.
-* v4.0.5 - October 17, 2014
-	* Actually fixed bug that caused `eventTimeout` to always be null.
-	* Removed `.bind` dependency and polyfill.
-* v4.0.4 - October 17, 2014
-	* Fixed bug that caused `eventTimeout` to always be null.
-* v4.0.3 - October 2, 2014
-	* Fixed CommonJS bug.
-	* Added lazypipe to `gulpfile.js`.
-* v4.0.2 - August 15, 2014
-	* Added fix for UMD structure.
-* v4.0.1 - August 8, 2014
-	* Added polyfill for `Functions.prototype.bind`.
-	* Removed Sass paths from `gulpfile.js`.
-* v4.0.0 - July 1, 2014
-	* Updated `getDataOptions()` method to use JSON.
-	* Fixed link support.
-* v3.2.1 - June 28, 2014
-	* Fixed `extend()` method.
-* v3.2.0 - June 20, 2014
-	* Converted to gulp.js workflow.
-	* Added unit testing.
-	* Updated naming conventions.
-	* Added minified versions of files.
-* v3.1.1 - June 19, 2014
-	* Fixed factory/root/UMD definition.
-* v3.1.0 - June 8, 2014
-	* Added UMD support.
-	* Moved public APIs to exports variable.
-	* Improved feature test.
-	* Replaced `Array.prototype.forEach` hack with proper `forEach` function.
-	* Added a more well supported `trim` function.
-	* General code optimizations for better minification and performance.
-	* Updated to JSDoc documentation.
-	* Updated to three number versioning system.
-	* Added package manager installation info.
-* v3.0 - March 20, 2014
-	* [Added iframe lazy loading support.](https://github.com/cferdinandi/jellyfish/issues/3)
-	* Renamed `data-options` attribute to `data-load-attributes`.
-	* [Added options overrides on a content-by-content basis.](https://github.com/cferdinandi/jellyfish/issues/3)
-	* Added callbacks during icon loading phase.
-	* Renamed various private and public functions to account increased types of content that can be loaded.
-* v2.4 - March 19, 2014
-	* Passed arguments into callback functions.
-* v2.3 - February 28, 2014
-	* Added `addImgLoaders` to publicly available methods.
-* v2.2 - February 27, 2014
-	* Converted `_defaults` to a literal object
-* v2.1 - Feburary 25, 2014
-	* Fixed callbacks.
-* v2.0 - February 24, 2014
-	* Better public/private method namespacing.
-	* Require `init()` call to run.
-	* New API exposes additional methods for use in your own scripts.
-	* Better documentation.
-* v1.1 - Feburary 19, 2014
-	* Added an option to start loading images before they enter the viewport.
-* v1.0 - February 19, 2014
-	* Initial release.
 
 
 
