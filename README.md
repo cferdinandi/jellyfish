@@ -12,7 +12,6 @@ A progressively enhanced image and iframe lazy loader.
 5. [Browser Compatibility](#browser-compatibility)
 6. [How to Contribute](#how-to-contribute)
 7. [License](#license)
-8. [Older Docs](#older-docs)
 
 
 
@@ -222,11 +221,5 @@ In lieu of a formal style guide, take care to maintain the existing coding style
 
 
 ## License
-Jellyfish is licensed under the [MIT License](http://gomakethings.com/mit/). Loading icon by [AjaxLoad](http://www.ajaxload.info/).
 
-
-
-## Older Docs
-
-* [Version 2](https://github.com/cferdinandi/jellyfish/tree/archive-v2)
-* [Version 1](http://cferdinandi.github.io/jellyfish/archive/v1/)
+The code is available under the [MIT License](LICENSE.md).
