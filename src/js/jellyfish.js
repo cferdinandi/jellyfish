@@ -187,7 +187,6 @@
 	 * @param  {Object} settings
 	 */
 	var eventThrottler = function () {
-		console.log(eventTimeout);
 		if ( !eventTimeout ) {
 			eventTimeout = setTimeout( function() {
 				eventTimeout = null;
