@@ -1,4 +1,7 @@
-# Jellyfish [![Build Status](https://travis-ci.org/cferdinandi/jellyfish.svg)](https://travis-ci.org/cferdinandi/jellyfish)
+# [DEPRECATED] Jellyfish [![Build Status](https://travis-ci.org/cferdinandi/jellyfish.svg)](https://travis-ci.org/cferdinandi/jellyfish)
+
+**Deprecation Notice:** This project is no longer being maintained.
+
 A progressively enhanced image and iframe lazy loader.
 
 [Download Jellyfish](https://github.com/cferdinandi/jellyfish/archive/master.zip) / [View the demo](http://cferdinandi.github.io/jellyfish/)
