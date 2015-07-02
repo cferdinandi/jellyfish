@@ -1,6 +1,6 @@
 # [DEPRECATED] Jellyfish [![Build Status](https://travis-ci.org/cferdinandi/jellyfish.svg)](https://travis-ci.org/cferdinandi/jellyfish)
 
-**Deprecation Notice:** This project is no longer being maintained.
+***Deprecation Notice:*** *This project is no longer being maintained. The Picture element (usable today with [Picturefill.js](http://scottjehl.github.io/picturefill/) is better and more accessible.*
 
 A progressively enhanced image and iframe lazy loader.
 
